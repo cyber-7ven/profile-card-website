@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kryssie Adams — Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .playfair { font-family: 'Playfair Display', serif; }
+    .banner { background: linear-gradient(135deg, #3C3489 0%, #7F77DD 100%); }
+    .skill-bar { height: 6px; border-radius: 99px; background: #e5e7eb; overflow: hidden; }
+    .skill-fill { height: 100%; border-radius: 99px; background: #534AB7; animation: grow 1.2s ease forwards; }
+    @keyframes grow { from { width: 0; } }
+    .fade-in { animation: fadeUp 0.5s ease both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+    .tag { display: inline-flex; align-items: center; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin: 2px 2px 0 0; }
+    .card-hover { transition: transform 0.18s, box-shadow 0.18s; }
+    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.07); }
+    .timeline-dot { width: 10px; height: 10px; border-radius: 50%; background: #534AB7; margin-top: 5px; shrink: 0; }
+    .timeline-line { width: 2px; background: #e5e7eb; flex: 1; min-height: 24px; margin: 4px auto 0; }
+    /* modal */
+    .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:100; align-items:center; justify-content:center; }
+    .modal-backdrop.open { display:flex; }
+    input, textarea { outline: none; }
+    input:focus, textarea:focus { border-color: #534AB7 !important; }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: { DEFAULT: '#534AB7', light: '#7F77DD', dark: '#3C3489' } } } }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="bg-white border-b border-gray-100 sticky top-0 z-40">
+    <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <a href="index.html" class="playfair text-lg font-semibold text-gray-900 tracking-tight">Studio<span class="text-brand">.</span></a>
+      <a href="index.html" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        Back to team
+      </a>
+    </div>
+  </nav>
+
+  <!-- BANNER -->
+  <div class="banner h-52 w-full relative">
+    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px); background-size: 40px 40px;"></div>
+  </div>
+
+  <!-- PROFILE HEADER -->
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="flex flex-col sm:flex-row sm:items-end gap-4 -mt-16 mb-8 fade-in">
+      <img src="images/kryssie.jpeg" alt="Kryssie Adams"
+           class="w-28 h-28 rounded-2xl border-4 border-white shadow-lg object-cover shrink-0"
+           onerror="this.style.display='none'; document.getElementById('avatar-fallback').style.display='flex';" />
+      <div id="avatar-fallback" class="w-28 h-28 rounded-2xl border-4 border-white shadow-lg bg-indigo-700 items-center justify-content-center text-white font-bold text-3xl shrink-0" style="display:none; align-items:center; justify-content:center;">KA</div>
+
+      <div class="pb-1 flex-1">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <h1 class="playfair text-3xl font-bold text-gray-900 leading-tight">Kryssie Adams</h1>
+              <span class="tag bg-indigo-50 text-indigo-700 text-xs">✦ Team Lead</span>
+            </div>
+            <p class="text-gray-400 text-sm">Product Design Lead · Studio</p>
+          </div>
+          <div class="flex gap-2 mt-2 sm:mt-0">
+            <button onclick="openModal()" class="px-5 py-2 rounded-full bg-brand text-white text-sm font-medium hover:opacity-90 transition-opacity shadow-sm">Send message</button>
+            <a href="mailto:christabeladamu2@gmail.com" class="px-5 py-2 rounded-full border border-gray-200 text-sm text-gray-600 font-medium hover:border-brand hover:text-brand transition-colors">Email directly</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-20 fade-in" style="animation-delay:0.1s">
+
+      <!-- LEFT SIDEBAR -->
+      <div class="space-y-5">
+
+        <!-- About -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">About</h2>
+          <p class="text-sm text-gray-600 leading-relaxed">Kryssie is a creative and strategic Product Design Lead with over 7 years of experience crafting user-centred digital products. She bridges the gap between business goals and human needs — turning complex problems into clean, intuitive experiences. Known for building strong design cultures and mentoring junior designers into confident, independent practitioners.</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Highlights</h2>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-indigo-50 rounded-xl p-3">
+              <p class="text-base font-semibold text-indigo-700">4.2k</p>
+              <p class="text-xs text-indigo-400 mt-0.5">Followers</p>
+            </div>
+            <div class="bg-indigo-50 rounded-xl p-3">
+              <p class="text-base font-semibold text-indigo-700">38</p>
+              <p class="text-xs text-indigo-400 mt-0.5">Projects</p>
+            </div>
+            <div class="bg-indigo-50 rounded-xl p-3">
+              <p class="text-base font-semibold text-indigo-700">12</p>
+              <p class="text-xs text-indigo-400 mt-0.5">Awards</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Skills</h2>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Figma </span><span>98%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:96%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs text-gray-500 mb-1"><span>UX Research</span><span>91%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:91%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Design Systems</span><span>94%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:94%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Team Leadership</span><span>70%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:89%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Visual Design</span><span>88%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Motion & Animation</span><span>75%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Contact</h2>
+          <div class="space-y-3 text-sm">
+            <a href="mailto:kryssie.adams@studio.co" class="flex items-center gap-3 text-gray-500 hover:text-brand transition-colors group">
+              <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0 group-hover:bg-indigo-100 transition-colors">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              christabeladamu2@gmail.com
+            </a>
+            <div class="flex items-center gap-3 text-gray-500">
+              <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </div>
+              jos, Nigeria
+            </div>
+            <div class="flex items-center gap-3 text-gray-500">
+              <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              Studio · Full-time
+            </div>
+            <div class="flex items-center gap-3 text-gray-500">
+              <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              </div>
+              +234 8109983290
+            </div>
+          </div>
+          <!-- social links -->
+          <div class="flex gap-2 mt-4 pt-4 border-t border-gray-100">
+            <a href="#" class="flex-1 py-2 rounded-lg bg-gray-50 text-xs text-gray-500 font-medium text-center hover:bg-indigo-50 hover:text-indigo-600 transition-colors">LinkedIn</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT MAIN -->
+      <div class="lg:col-span-2 space-y-5">
+
+        <!-- Expertise tags -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Expertise</h2>
+          <div>
+            <span class="tag bg-indigo-50 text-indigo-700">Figmma</span>
+            <span class="tag bg-indigo-50 text-indigo-700">UX Research</span>
+            <span class="tag bg-indigo-50 text-indigo-700">Design Systems</span>
+            <span class="tag bg-indigo-50 text-indigo-700">Accessibility</span>
+            <span class="tag bg-indigo-50 text-indigo-700">User Testing</span>
+            <span class="tag bg-purple-50 text-purple-700">Product Strategy</span>
+            <span class="tag bg-purple-50 text-purple-700">Design Thinking</span>
+            <span class="tag bg-gray-100 text-gray-600">HTML / CSS</span>
+          </div>
+        </div>
+
+        <!-- Experience timeline -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-5">Experience</h2>
+          <div class="space-y-6">
+
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="timeline-dot"></div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="pb-2">
+                <div class="flex flex-wrap items-center gap-2 mb-0.5">
+                  <p class="font-semibold text-gray-800 text-sm">Product Design Lead</p>
+                  <span class="tag bg-indigo-50 text-indigo-600">Current</span>
+                </div>
+                <p class="text-xs text-gray-400 mb-2">Studio · Lagos, Nigeria · 2022 – Present</p>
+                <p class="text-sm text-gray-500 leading-relaxed">Leading a design team of 6 across 4 product lines. Established the company's first design system (200+ components), cutting design-to-dev handoff time by 40%. Introduced weekly design crits and quarterly usability testing cycles.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="timeline-dot" style="background:#a5b4fc"></div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="pb-2">
+                <p class="font-semibold text-gray-800 text-sm">Senior UX Designer</p>
+                <p class="text-xs text-gray-400 mb-2">Flutterwave · Lagos, Nigeria · 2019 – 2022</p>
+                <p class="text-sm text-gray-500 leading-relaxed">Redesigned the merchant checkout flow — increased conversion rate by 27%. Collaborated with engineering and product teams across 10+ African markets. Mentored 3 junior designers who all received promotions.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="timeline-dot" style="background:#c4b5fd"></div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="pb-2">
+                <p class="font-semibold text-gray-800 text-sm">UX / UI Designer</p>
+                <p class="text-xs text-gray-400 mb-2">Andela · Remote · 2017 – 2019</p>
+                <p class="text-sm text-gray-500 leading-relaxed">Designed internal tools used by 500+ engineers globally. Ran guerrilla usability sessions and created Andela's first accessibility guidelines for web products.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="timeline-dot" style="background:#e9d5ff"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Education -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Education</h2>
+          <div class="space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800 text-sm">B.Sc. Computer Science</p>
+                <p class="text-xs text-gray-400">University of Lagos · 2011 – 2015</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800 text-sm">Google UX Design Certificate</p>
+                <p class="text-xs text-gray-400">Coursera / Google · 2018</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800 text-sm">Interaction Design Foundation — UX Management</p>
+                <p class="text-xs text-gray-400">IDF · 2021</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Featured projects -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-5">
+          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Featured work</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="card-hover rounded-xl p-4 bg-indigo-50">
+              <p class="font-semibold text-sm text-indigo-800 mb-1">Studio Design System</p>
+              <p class="text-xs text-indigo-500 leading-relaxed">200+ components, 40+ designers & engineers onboarded. Reduced design debt by 60%.</p>
+              <span class="mt-3 inline-block tag bg-indigo-100 text-indigo-600">Figma · Tokens · Docs</span>
+            </div>
+            <div class="card-hover rounded-xl p-4 bg-purple-50">
+              <p class="font-semibold text-sm text-purple-800 mb-1">Flutterwave Checkout Redesign</p>
+              <p class="text-xs text-purple-500 leading-relaxed">End-to-end redesign of payment flow across web & mobile. +27% conversion uplift.</p>
+              <span class="mt-3 inline-block tag bg-purple-100 text-purple-600">UX · Research · Mobile</span>
+            </div>
+            <div class="card-hover rounded-xl p-4 bg-violet-50">
+              <p class="font-semibold text-sm text-violet-800 mb-1">Andela Internal Tools Suite</p>
+              <p class="text-xs text-violet-500 leading-relaxed">Designed 5 internal tools for global engineering operations. Used daily by 500+ staff.</p>
+              <span class="mt-3 inline-block tag bg-violet-100 text-violet-600">B2B · Dashboards</span>
+            </div>
+            <div class="card-hover rounded-xl p-4 bg-fuchsia-50">
+              <p class="font-semibold text-sm text-fuchsia-800 mb-1">Accessibility Audit — 2024</p>
+              <p class="text-xs text-fuchsia-500 leading-relaxed">Led full WCAG 2.1 AA audit across Studio's product suite. Raised compliance score to 97%.</p>
+              <span class="mt-3 inline-block tag bg-fuchsia-100 text-fuchsia-600">A11y · WCAG · Audit</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-gray-100 bg-white py-8 text-center text-sm text-gray-400">
+    <span class="playfair text-gray-700 font-semibold">Studio<span class="text-brand">.</span></span>
+    <span class="mx-3 text-gray-200">|</span>
+    Built with Tailwind CSS
+  </footer>
+
+  <!-- EMAIL MODAL -->
+  <div class="modal-backdrop" id="modal" onclick="handleBackdropClick(event)">
+    <div class="bg-white rounded-2xl w-full max-w-md mx-4 overflow-hidden shadow-xl">
+      <!-- modal header -->
+      <div class="banner px-6 py-4 flex items-center justify-between">
+        <div>
+          <p class="text-white font-semibold text-sm">Send a message</p>
+          <p class="text-indigo-200 text-xs mt-0.5">Kryssie Adams · christabeladamu2@gmail.com</p>
+        </div>
+        <button onclick="closeModal()" class="w-7 h-7 rounded-full bg-white bg-opacity-20 text-white text-sm flex items-center justify-center hover:bg-opacity-30 transition">✕</button>
+      </div>
+      <!-- modal body -->
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="text-xs font-medium text-gray-500 mb-1 block">Your name</label>
+          <input id="sender-name" type="text" placeholder="Jane Smith" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 transition" style="outline:none" />
+        </div>
+        <div>
+          <label class="text-xs font-medium text-gray-500 mb-1 block">Your email (reply-to)</label>
+          <input id="sender-email" type="email" placeholder="you@example.com" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 transition" style="outline:none" />
+        </div>
+        <div>
+          <label class="text-xs font-medium text-gray-500 mb-1 block">Subject</label>
+          <input id="subject" type="text" placeholder="Hi Kryssie, I'd love to connect…" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 transition" style="outline:none" />
+        </div>
+        <div>
+          <label class="text-xs font-medium text-gray-500 mb-1 block">Message</label>
+          <textarea id="message" rows="4" placeholder="Write your message here…" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 resize-none transition" style="outline:none"></textarea>
+        </div>
+        <div id="form-error" class="text-xs text-red-500 hidden">Please fill in all fields before sending.</div>
+        <button onclick="sendEmail()" class="w-full py-3 rounded-xl bg-brand text-white font-medium text-sm hover:opacity-90 transition-opacity">
+          Send message →
+        </button>
+        <p class="text-xs text-center text-gray-400">This opens your default email app with the message pre-filled.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openModal() {
+      document.getElementById('modal').classList.add('open');
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+    }
+    function handleBackdropClick(e) {
+      if (e.target === document.getElementById('modal')) closeModal();
+    }
+    function sendEmail() {
+      const name    = document.getElementById('sender-name').value.trim();
+      const email   = document.getElementById('sender-email').value.trim();
+      const subject = document.getElementById('subject').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const errEl   = document.getElementById('form-error');
+
+      if (!name || !email || !subject || !message) {
+        errEl.classList.remove('hidden');
+        return;
+      }
+      errEl.classList.add('hidden');
+
+      const body = `Hi Kryssie,%0D%0A%0D%0A${encodeURIComponent(message)}%0D%0A%0D%0A— ${encodeURIComponent(name)}%0D%0AReply to: ${encodeURIComponent(email)}`;
+      window.location.href = `mailto:kryssie.adams@studio.co?subject=${encodeURIComponent(subject)}&body=${body}`;
+      closeModal();
+    }
+  </script>
+
+</body>
+</html>
