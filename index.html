@@ -1,239 +1,966 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Card</title>
-    <link rel="stylesheet" href="src/output.css">
-<body>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Our Team — Profile Cards</title>
+  <title>Our Team — Cyber 7ven</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+
   <style>
-    body { font-family: 'DM Sans', sans-serif; }
-    .playfair { font-family: 'Playfair Display', serif; }
-    .card-hover { transition: transform 0.22s cubic-bezier(.25,.8,.25,1), box-shadow 0.22s; }
-    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-    .banner-purple { background: linear-gradient(135deg, #3C3489 0%, #7F77DD 100%); }
-    .banner-teal   { background: linear-gradient(135deg, #085041 0%, #1D9E75 100%); }
+    :root {
+      --ink:   #072566;
+      --navy:  #0c1c36;
+      --navy2: #0f1d35;
+      --navy3: #162340;
+      --amber: #f59e0b;
+      --ember: #ea580c;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* ── Dot grid ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: radial-gradient(circle, rgba(245,158,11,0.09) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Noise ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.35;
+    }
+
+    /* ── Scrollbar ── */
+    * { scrollbar-width: thin; scrollbar-color: #f59e0b #0b1526; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 2px; }
+
+    /* ── Glass nav ── */
+    .glass-nav {
+      background: rgba(7, 37, 102, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .syne { font-family: 'Syne', sans-serif; }
+
+    .amber-text {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Profile card ── */
+    .profile-card {
+      background: var(--navy2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      overflow: hidden;
+      display: block;
+      transition: transform 0.24s cubic-bezier(.25,.8,.25,1), box-shadow 0.24s ease, border-color 0.24s ease;
+      text-decoration: none;
+      position: relative;
+    }
+    .profile-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(245,158,11,0.03) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    .profile-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,158,11,0.18);
+      border-color: rgba(245,158,11,0.28);
+    }
+
+    /* ── Project card ── */
+    .project-card {
+      background: var(--navy2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+      position: relative;
+    }
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(245,158,11,0.18);
+      border-color: rgba(245,158,11,0.25);
+    }
+
+    /* ── Banner colours ── */
     .banner-coral  { background: linear-gradient(135deg, #712B13 0%, #D85A30 100%); }
-    .banner-pink   { background: linear-gradient(135deg, #3C3489 0%, #D4537E 100%); }
     .banner-blue   { background: linear-gradient(135deg, #0C447C 0%, #378ADD 100%); }
     .banner-green  { background: linear-gradient(135deg, #27500A 0%, #639922 100%); }
-    .tag { display: inline-flex; align-items: center; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin: 2px 2px 0 0; }
-    .fade-in { animation: fadeUp 0.5s ease both; }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
-    .avatar-img { width: 56px; height: 56px; border-radius: 9999px; border: 4px solid white; object-fit: cover; margin-top: -28px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
-  </style>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: { DEFAULT: '#534AB7', light: '#7F77DD', dark: '#3C3489' }
-          }
-        }
-      }
-    }
-  </script>
-</head>
-<!-- <body class="bg-gray-50 min-h-screen"> -->
 
-  <!-- NAV -->
-  <nav class="bg-white border-b border-gray-100 sticky top-0 z-40">
-    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-      <a href="index.html" class="playfair text-lg font-semibold text-gray-900 tracking-tight">Studio<span class="text-brand">.</span></a>
-      <div class="flex items-center gap-6 text-sm text-gray-500">
-        <a href="index.html" class="text-brand font-medium">Team</a>
-        <a href="#" class="hover:text-gray-800 transition-colors">Projects</a>
-        <a href="#" class="hover:text-gray-800 transition-colors">About</a>
-        <a href="#" class="ml-2 px-4 py-1.5 rounded-full border border-brand text-brand text-sm font-medium hover:bg-brand hover:text-white transition-colors">Contact</a>
+    /* ── Avatar ring ── */
+    .avatar-ring {
+      width: 62px; height: 62px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      padding: 3px;
+      margin-top: -31px; margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(245,158,11,0.3);
+      position: relative; z-index: 1; flex-shrink: 0;
+    }
+    .avatar-ring img {
+      width: 100%; height: 100%;
+      border-radius: 9999px;
+      object-fit: cover;
+      border: 2px solid var(--navy2);
+    }
+
+    /* ── Tag ── */
+    .tag {
+      display: inline-flex; align-items: center;
+      font-size: 10px; font-weight: 600;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: 0.03em;
+      padding: 3px 10px; border-radius: 50px;
+      margin: 2px 2px 0 0; border: 1px solid;
+    }
+
+    /* ── Filter button ── */
+    .filter-btn {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px; font-weight: 600;
+      padding: 8px 18px; border-radius: 50px;
+      border: 1.5px solid; cursor: pointer;
+      transition: all 0.2s ease; letter-spacing: 0.04em;
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      border-color: transparent; color: #080f1e;
+      box-shadow: 0 6px 20px rgba(245,158,11,0.3);
+    }
+    .filter-btn:not(.active) {
+      background: rgba(15,29,53,0.6);
+      border-color: rgba(255,255,255,0.12);
+      color: #94a3b8;
+    }
+    .filter-btn:not(.active):hover {
+      border-color: rgba(245,158,11,0.4);
+      color: #f59e0b;
+      background: rgba(245,158,11,0.06);
+    }
+
+    /* ── Fade-up ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .fade-in { animation: fadeUp 0.55s cubic-bezier(.22,1,.36,1) both; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: #f59e0b;
+    }
+
+    .stat-divider { height: 28px; width: 1px; background: rgba(255,255,255,0.08); }
+
+    .amber-rule {
+      height: 1.5px;
+      background: linear-gradient(90deg, #f59e0b, #ea580c, transparent);
+      border: none;
+    }
+
+    /* ── Nav link ── */
+    .nav-link {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px; font-weight: 500;
+      color: #94a3b8; text-decoration: none;
+      transition: color 0.2s; position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1.5px; background: #f59e0b;
+      transition: width 0.25s;
+    }
+    .nav-link:hover { color: #f59e0b; }
+    .nav-link:hover::after { width: 100%; }
+    .nav-link.active-link { color: #f59e0b; }
+    .nav-link.active-link::after { width: 100%; }
+
+    /* ── Dept badge ── */
+    .dept-badge {
+      position: absolute; top: 10px; right: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 50px;
+      background: rgba(7,37,102,0.82);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #f59e0b; z-index: 2;
+    }
+
+    /* ── View profile ── */
+    .view-profile {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px; font-weight: 700;
+      color: #f59e0b;
+      display: flex; align-items: center; gap: 5px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: gap 0.2s;
+    }
+    .profile-card:hover .view-profile { gap: 10px; }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px; font-weight: 700; color: #fff;
+    }
+    .stat-label {
+      font-size: 9px; color: #475569;
+      margin-top: 1px; line-height: 1.3; max-width: 58px;
+    }
+
+    /* ── Count chip ── */
+    .count-chip {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px; font-weight: 700;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.2);
+      color: #f59e0b; padding: 2px 10px; border-radius: 50px;
+    }
+
+    /* ── Floating tech pills ── */
+    .tech-float {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .tech-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(12, 28, 54, 0.8);
+      border: 1px solid rgba(245,158,11,0.22);
+      border-radius: 50px;
+      padding: 7px 14px;
+      font-family: 'Syne', sans-serif;
+      font-size: 11px; font-weight: 700;
+      color: #cbd5e1;
+      backdrop-filter: blur(10px);
+      white-space: nowrap; letter-spacing: 0.03em;
+    }
+    .tech-pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+
+    @keyframes float1 { 0%,100%{transform:translateY(0) rotate(-2deg);opacity:.7} 50%{transform:translateY(-18px) rotate(2deg);opacity:1} }
+    @keyframes float2 { 0%,100%{transform:translateY(0) rotate(3deg);opacity:.65} 50%{transform:translateY(-14px) rotate(-2deg);opacity:.95} }
+    @keyframes float3 { 0%,100%{transform:translateY(0) rotate(-1deg);opacity:.6} 50%{transform:translateY(-22px) rotate(3deg);opacity:.9} }
+    @keyframes float4 { 0%,100%{transform:translateY(0) rotate(2deg);opacity:.75} 50%{transform:translateY(-12px) rotate(-3deg);opacity:1} }
+    @keyframes float5 { 0%,100%{transform:translateY(0) rotate(-3deg);opacity:.6} 50%{transform:translateY(-20px) rotate(1deg);opacity:.9} }
+    @keyframes float6 { 0%,100%{transform:translateY(0) rotate(1deg);opacity:.7} 50%{transform:translateY(-16px) rotate(-2deg);opacity:.95} }
+    @keyframes float7 { 0%,100%{transform:translateY(0) rotate(-2deg);opacity:.65} 50%{transform:translateY(-10px) rotate(3deg);opacity:.88} }
+
+    /* ── Stats banner ── */
+    .stats-banner {
+      background: linear-gradient(135deg, rgba(12,28,54,0.85) 0%, rgba(7,37,102,0.65) 100%);
+      border: 1px solid rgba(245,158,11,0.13);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+    .banner-stat-num {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Project link btns ── */
+    .proj-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Syne', sans-serif;
+      font-size: 11px; font-weight: 700;
+      padding: 7px 16px; border-radius: 50px;
+      text-decoration: none; letter-spacing: 0.05em;
+      transition: all 0.2s ease;
+    }
+    .proj-btn-outline { border: 1.5px solid rgba(255,255,255,0.15); color: #94a3b8; }
+    .proj-btn-outline:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
+    .proj-btn-amber {
+      background: rgba(245,158,11,0.12);
+      border: 1.5px solid rgba(245,158,11,0.3); color: #f59e0b;
+    }
+    .proj-btn-amber:hover { background: rgba(245,158,11,0.22); border-color: #f59e0b; }
+
+    /* ── Section heading ── */
+    .section-heading {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; letter-spacing: -0.03em;
+    }
+
+    /* ── Scroll reveal ── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Hamburger ── */
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: #e2e8f0; border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    #mobile-menu {
+      background: rgba(7, 37, 102, 0.97);
+      backdrop-filter: blur(20px);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════ -->
+<nav class="glass-nav fixed top-0 inset-x-0 z-50">
+  <div class="max-w-6xl mx-auto px-6 flex items-center justify-between" style="height:60px;">
+    <a href="index.html" class="flex items-center gap-2.5 group">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+        style="background:linear-gradient(135deg,#f59e0b,#ea580c);">
+        <span class="syne font-bold text-xs" style="color:#080f1e;">C7</span>
+      </div>
+      <span class="syne font-bold text-white text-base tracking-tight group-hover:text-amber-400 transition-colors">
+        Cyber 7ven<span style="color:#f59e0b;">.</span>
+      </span>
+    </a>
+    <div class="hidden sm:flex items-center gap-7">
+      <a href="#team"     class="nav-link active-link">Team</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#about"    class="nav-link">About</a>
+      <a href="#"
+        class="syne text-xs font-bold px-5 py-2.5 rounded-full border transition-all"
+        style="border-color:rgba(245,158,11,0.5);color:#f59e0b;letter-spacing:0.06em;"
+        onmouseover="this.style.background='linear-gradient(135deg,#f59e0b,#ea580c)';this.style.color='#080f1e';this.style.borderColor='transparent';"
+        onmouseout="this.style.background='';this.style.color='#f59e0b';this.style.borderColor='rgba(245,158,11,0.5)';">
+        Contact
+      </a>
+    </div>
+    <button id="hamburger-btn" class="hamburger sm:hidden flex flex-col gap-1.5 p-1" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden sm:hidden absolute inset-x-0 top-full border-t" style="border-color:rgba(255,255,255,0.08);">
+    <div class="px-6 py-5 flex flex-col gap-4">
+      <a href="#team"     onclick="closeMobileMenu()" class="nav-link text-sm">Team</a>
+      <a href="#projects" onclick="closeMobileMenu()" class="nav-link text-sm">Projects</a>
+      <a href="#about"    onclick="closeMobileMenu()" class="nav-link text-sm">About</a>
+      <a href="#" onclick="closeMobileMenu()"
+        class="syne text-xs font-bold px-5 py-3 rounded-full text-center"
+        style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#080f1e;">Contact</a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<header class="relative z-10 max-w-6xl mx-auto px-6 pt-32 pb-16 text-center overflow-hidden">
+
+  <!-- Background blobs -->
+  <div style="position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,#f59e0b,transparent 70%);filter:blur(70px);opacity:.07;top:-80px;left:-60px;pointer-events:none;"></div>
+  <div style="position:absolute;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,#ea580c,transparent 70%);filter:blur(80px);opacity:.05;top:-40px;right:-80px;pointer-events:none;"></div>
+
+  <!-- Floating tech pills -->
+  <div class="tech-float" style="top:8%;left:0%;animation:float1 7s ease-in-out infinite;">
+    <div class="tech-pill"><span class="dot" style="background:#e34c26;"></span>HTML</div>
+  </div>
+  <div class="tech-float" style="top:22%;left:2%;animation:float3 8.5s ease-in-out infinite;animation-delay:1.2s;">
+    <div class="tech-pill"><span class="dot" style="background:#264de4;"></span>CSS</div>
+  </div>
+  <div class="tech-float" style="top:5%;right:1%;animation:float2 9s ease-in-out infinite;animation-delay:.5s;">
+    <div class="tech-pill"><span class="dot" style="background:#06b6d4;"></span>Tailwind</div>
+  </div>
+  <div class="tech-float" style="top:30%;right:0%;animation:float4 6.5s ease-in-out infinite;animation-delay:2s;">
+    <div class="tech-pill"><span class="dot" style="background:#f7df1e;"></span>JavaScript</div>
+  </div>
+  <div class="tech-float" style="bottom:18%;left:0%;animation:float5 10s ease-in-out infinite;animation-delay:.8s;">
+    <div class="tech-pill"><span class="dot" style="background:#3776ab;"></span>Python</div>
+  </div>
+  <div class="tech-float" style="bottom:26%;right:0%;animation:float6 7.5s ease-in-out infinite;animation-delay:1.5s;">
+    <div class="tech-pill"><span class="dot" style="background:#009688;"></span>FastAPI</div>
+  </div>
+  <div class="tech-float" style="bottom:8%;left:1%;animation:float7 11s ease-in-out infinite;animation-delay:3s;">
+    <div class="tech-pill"><span class="dot" style="background:#f05032;"></span>Git</div>
+  </div>
+
+  <p class="section-label mb-4 fade-in" style="animation-delay:.05s;position:relative;z-index:2;">Cyber 7ven's Core Devs</p>
+
+  <h1 class="syne font-extrabold text-white mb-4 fade-in"
+    style="font-size:clamp(40px,7vw,76px);letter-spacing:-.03em;line-height:.95;animation-delay:.1s;position:relative;z-index:2;">
+    Meet our&nbsp;<span class="amber-text">team.</span>
+  </h1>
+
+  <div class="flex items-center justify-center gap-4 mb-5 fade-in" style="animation-delay:.15s;position:relative;z-index:2;">
+    <hr class="amber-rule w-16" />
+    <span class="section-label" style="font-size:10px;letter-spacing:.25em;">5 MEMBERS</span>
+    <hr class="amber-rule w-16" />
+  </div>
+
+  <p class="text-slate-400 text-base max-w-lg mx-auto leading-relaxed fade-in"
+    style="font-weight:300;animation-delay:.2s;position:relative;z-index:2;">
+    Designers, engineers and strategists building scalable digital products — from sleek UIs to robust backends and bulletproof deployments.
+  </p>
+
+  <div class="flex flex-wrap gap-3 justify-center mt-8 fade-in" style="animation-delay:.25s;position:relative;z-index:2;">
+    <a href="#team"
+      class="syne text-sm font-bold px-6 py-3 rounded-full"
+      style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#080f1e;box-shadow:0 8px 24px rgba(245,158,11,.3);">
+      Meet the Team ↓
+    </a>
+    <a href="#projects"
+      class="syne text-sm font-bold px-6 py-3 rounded-full border"
+      style="border-color:rgba(245,158,11,.4);color:#f59e0b;"
+      onmouseover="this.style.background='rgba(245,158,11,.08)'"
+      onmouseout="this.style.background=''">
+      View Projects →
+    </a>
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════════════
+     TEAM STATS BANNER
+════════════════════════════════════════════ -->
+<section id="about" class="relative z-10 max-w-6xl mx-auto px-6 mb-16">
+  <div class="stats-banner px-8 py-8 reveal">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+      <div>
+        <p class="banner-stat-num" style="font-size:clamp(28px,4vw,44px);">5</p>
+        <p class="text-xs text-slate-500 mt-1 syne tracking-widest uppercase">Team Members</p>
+      </div>
+      <div>
+        <p class="banner-stat-num" style="font-size:clamp(28px,4vw,44px);">10+</p>
+        <p class="text-xs text-slate-500 mt-1 syne tracking-widest uppercase">Projects Shipped</p>
+      </div>
+      <div>
+        <p class="banner-stat-num" style="font-size:clamp(28px,4vw,44px);">3+</p>
+        <p class="text-xs text-slate-500 mt-1 syne tracking-widest uppercase">Years Building</p>
+      </div>
+      <div>
+        <p class="banner-stat-num" style="font-size:clamp(28px,4vw,44px);">100%</p>
+        <p class="text-xs text-slate-500 mt-1 syne tracking-widest uppercase">Remote & Async</p>
       </div>
     </div>
-  </nav>
-
-  <!-- HERO -->
-  <header class="max-w-6xl mx-auto px-6 pt-16 pb-10 text-center">
-    <p class="text-sm font-medium text-brand uppercase tracking-widest mb-3">The people</p>
-    <h1 class="playfair text-5xl font-bold text-gray-900 leading-tight mb-4">Meet our team</h1>
-    <p class="text-gray-500 text-base max-w-md mx-auto leading-relaxed">Designers, engineers and strategists working together to build things that matter.</p>
-  </header>
-
-  <!-- FILTER BAR -->
-  <div class="max-w-6xl mx-auto px-6 mb-8 flex flex-wrap gap-2 justify-center">
-    <button onclick="filter('all')" id="btn-all" class="filter-btn px-4 py-1.5 rounded-full text-sm font-medium bg-brand text-white border border-brand transition-all">All</button>
-    <button onclick="filter('design')" id="btn-design" class="filter-btn px-4 py-1.5 rounded-full text-sm font-medium bg-white text-gray-600 border border-gray-200 hover:border-brand hover:text-brand transition-all">Design</button>
-    <button onclick="filter('engineering')" id="btn-engineering" class="filter-btn px-4 py-1.5 rounded-full text-sm font-medium bg-white text-gray-600 border border-gray-200 hover:border-brand hover:text-brand transition-all">Engineering</button>
-    <button onclick="filter('research')" id="btn-research" class="filter-btn px-4 py-1.5 rounded-full text-sm font-medium bg-white text-gray-600 border border-gray-200 hover:border-brand hover:text-brand transition-all">Research</button>
-    <button onclick="filter('operations')" id="btn-operations" class="filter-btn px-4 py-1.5 rounded-full text-sm font-medium bg-white text-gray-600 border border-gray-200 hover:border-brand hover:text-brand transition-all">Operations</button>
   </div>
+</section>
 
-  <!-- CARDS GRID -->
-  <main class="max-w-6xl mx-auto px-6 pb-20">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="cards-grid">
 
-      <!-- Card 1 -->
-      <a href="kryssie-profile.html" data-dept="design" class="profile-card card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 block fade-in" style="animation-delay:0.05s">
-<div>
-  <img src="images/kryssie.jpeg" alt="Kryssie" class="w-full h-32 object-cover ">
-</div>        <div class="px-5 pb-5 pt-0 relative">
-          <img src="images/kryssie.jpeg" alt="kryssie adams" class="avatar-img" />
-          <h3 class="font-semibold text-gray-900 text-base leading-tight">kryssie adams</h3>
-          <p class="text-xs text-gray-400 mt-0.5 mb-3">team lead</p>
-          <div class="mb-4">
-            <span class="tag bg-indigo-50 text-indigo-700">Figma</span>
-            <span class="tag bg-indigo-50 text-indigo-700">UX Research</span>
-            <span class="tag bg-indigo-50 text-indigo-700">Design Systems</span>
-          </div>
-          <div class="border-t border-gray-100 pt-3 flex gap-5 mb-4">
-            <div><p class="text-sm font-semibold text-gray-800">4.2k</p><p class="text-xs text-gray-400">Followers</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">38</p><p class="text-xs text-gray-400">Projects</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">12</p><p class="text-xs text-gray-400">Awards</p></div>
-          </div>
-          <div class="flex items-center text-brand text-sm font-medium">View profile <svg class="ml-1.5 w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+<!-- ════════════════════════════════════════════
+     FILTER BAR
+════════════════════════════════════════════ -->
+<div id="team" class="relative z-10 max-w-6xl mx-auto px-6 mb-10 flex flex-wrap gap-2.5 justify-center reveal">
+  <button onclick="filter('all')"         id="btn-all"         class="filter-btn active">All Members</button>
+  <button onclick="filter('design')"      id="btn-design"      class="filter-btn">UI Design</button>
+  <button onclick="filter('engineering')" id="btn-engineering" class="filter-btn">Frontend</button>
+  <button onclick="filter('qa')"          id="btn-qa"          class="filter-btn">QA</button>
+  <button onclick="filter('devops')"      id="btn-devops"      class="filter-btn">DevOps</button>
+  <button onclick="filter('backend')"     id="btn-backend"     class="filter-btn">Backend</button>
+</div>
+
+<!-- Count chip -->
+<div class="relative z-10 max-w-6xl mx-auto px-6 mb-6 flex items-center gap-3 reveal">
+  <hr class="amber-rule flex-1 opacity-30" />
+  <span id="count-chip" class="count-chip">5 members</span>
+  <hr class="amber-rule flex-1 opacity-30" />
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     CARDS — ROW 1 (3 cards)
+════════════════════════════════════════════ -->
+<main class="relative z-10 max-w-6xl mx-auto px-6 pb-8">
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" id="cards-row-1">
+
+    <!-- ── Kryssie · data-dept="design" ── -->
+    <a href="kryssie-profile.html" data-dept="design"
+      class="profile-card fade-in" style="animation-delay:.05s;">
+      <div class="relative">
+        <img src="images/kryssie.jpeg" alt="Kryssie Adams" class="w-full h-36 object-cover" />
+        <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(15,29,53,.75) 0%,transparent 60%);"></div>
+        <span class="dept-badge">UI Design</span>
+      </div>
+      <div class="px-5 pb-5 pt-0 relative z-10">
+        <div class="avatar-ring"><img src="images/kryssie.jpeg" alt="Kryssie Adams" /></div>
+        <h3 class="syne font-bold text-white text-base leading-tight">Kryssie Adams</h3>
+        <p class="mt-0.5 mb-3" style="font-family:'Syne',sans-serif;letter-spacing:.06em;text-transform:uppercase;font-size:10px;color:#475569;">Team Lead · UI/UX Designer</p>
+        <div class="mb-4">
+          <span class="tag" style="background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:#a5b4fc;">Figma</span>
+          <span class="tag" style="background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:#a5b4fc;">UX Research</span>
+          <span class="tag" style="background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:#a5b4fc;">Design Systems</span>
         </div>
-      </a>
-
-      <!-- Card 2 -->
-      <a href="kelvin-profile.html" data-dept="engineering" class="profile-card card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 block fade-in" style="animation-delay:0.10s">
-<div>
-  <img src="images/kelvin.jpeg" alt="Kryssie" class="w-full h-32 object-cover ">
-  </div>
-        <div class="px-5 pb-5 pt-0 relative">
-          <img src="images/kelvin.jpeg" alt="kelvin" class="avatar-img" />
-          <h3 class="font-semibold text-gray-900 text-base leading-tight">kelvin</h3>
-          <p class="text-xs text-gray-400 mt-0.5 mb-3">frontend Engineer</p>
-          <div class="mb-4">
-            <span class="tag bg-emerald-50 text-emerald-700">Rust</span>
-            <span class="tag bg-emerald-50 text-emerald-700">Postgres</span>
-          </div>
-          <div class="border-t border-gray-100 pt-3 flex gap-5 mb-4">
-            <div><p class="text-sm font-semibold text-gray-800">2.8k</p><p class="text-xs text-gray-400">Followers</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">52</p><p class="text-xs text-gray-400">Projects</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">50</p><p class="text-xs text-gray-400">awards</p></div>
-          </div>
-          <div class="flex items-center text-brand text-sm font-medium">View profile <svg class="ml-1.5 w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+        <!-- Credibility stats — UI/UX Designer -->
+        <div class="border-t mb-4 pt-3 flex gap-4 items-start" style="border-color:rgba(255,255,255,.07);">
+          <div><p class="stat-num">4.9⭐</p><p class="stat-label">Client Rating</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">38</p><p class="stat-label">UI Designs</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">12</p><p class="stat-label">Design Awards</p></div>
         </div>
-      </a>
+        <div class="view-profile">View profile <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+      </div>
+    </a>
 
-      <!-- Card 3 -->
-      <a href="miracle-profile.html" data-dept="research" class="profile-card card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 block fade-in" style="animation-delay:0.15s">
-        <div class="banner-coral h-20 relative"></div>
-        <div class="px-5 pb-5 pt-0 relative">
-          <img src="images/miracle-iceking.jpg" alt="miracle iceking" class="avatar-img" />
-          <h3 class="font-semibold text-gray-900 text-base leading-tight">miracle iceking</h3>
-          <p class="text-xs text-gray-400 mt-0.5 mb-3">AI researcher</p>
-          <div class="mb-4">
-            <span class="tag bg-orange-50 text-orange-700">PyTorch</span>
-            <span class="tag bg-orange-50 text-orange-700">LLMs</span>
-            <span class="tag bg-orange-50 text-orange-700">ML Ops</span>
-          </div>
-          <div class="border-t border-gray-100 pt-3 flex gap-5 mb-4">
-            <div><p class="text-sm font-semibold text-gray-800">9.1k</p><p class="text-xs text-gray-400">Followers</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">21</p><p class="text-xs text-gray-400">Papers</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">1.3k</p><p class="text-xs text-gray-400">Citations</p></div>
-          </div>
-          <div class="flex items-center text-brand text-sm font-medium">View profile <svg class="ml-1.5 w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+    <!-- ── Kelvin · data-dept="engineering" ── -->
+    <a href="kelvin-profile.html" data-dept="engineering"
+      class="profile-card fade-in" style="animation-delay:.10s;">
+      <div class="relative">
+        <img src="images/kelvin.jpeg" alt="Kelvin" class="w-full h-36 object-cover" />
+        <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(15,29,53,.75) 0%,transparent 60%);"></div>
+        <span class="dept-badge">Frontend</span>
+      </div>
+      <div class="px-5 pb-5 pt-0 relative z-10">
+        <div class="avatar-ring"><img src="images/kelvin.jpeg" alt="Kelvin" /></div>
+        <h3 class="syne font-bold text-white text-base leading-tight">Kelvin</h3>
+        <p class="mt-0.5 mb-3" style="font-family:'Syne',sans-serif;letter-spacing:.06em;text-transform:uppercase;font-size:10px;color:#475569;">Frontend Engineer</p>
+        <div class="mb-4">
+          <span class="tag" style="background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:#6ee7b7;">Rust</span>
+          <span class="tag" style="background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:#6ee7b7;">Postgres</span>
+          <span class="tag" style="background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:#6ee7b7;">React</span>
         </div>
-      </a>
-
-      <!-- Card 4 -->
-      <a href="anita-profile.html" data-dept="operations" class="profile-card card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 block fade-in" style="animation-delay:0.20s">
-<div>
-  <img src="images/anita.jpeg" alt="Kryssie" class="w-full h-32 object-cover ">
-  </div>
-        <div class="px-5 pb-5 pt-0 relative">
-          <img src="images/anita.jpeg" alt="anita" class="avatar-img" />
-          <h3 class="font-semibold text-gray-900 text-base leading-tight">anita</h3>
-          <p class="text-xs text-gray-400 mt-0.5 mb-3">Growth & Marketing</p>
-          <div class="mb-4">
-            <span class="tag bg-pink-50 text-pink-700">Growth</span>
-            <span class="tag bg-pink-50 text-pink-700">Analytics</span>
-            <span class="tag bg-pink-50 text-pink-700">SEO</span>
-          </div>
-          <div class="border-t border-gray-100 pt-3 flex gap-5 mb-4">
-            <div><p class="text-sm font-semibold text-gray-800">5.5k</p><p class="text-xs text-gray-400">Followers</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">3×</p><p class="text-xs text-gray-400">Pipeline</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">40+</p><p class="text-xs text-gray-400">Campaigns</p></div>
-          </div>
-          <div class="flex items-center text-brand text-sm font-medium">View profile <svg class="ml-1.5 w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+        <!-- Credibility stats — Frontend Engineer -->
+        <div class="border-t mb-4 pt-3 flex gap-4 items-start" style="border-color:rgba(255,255,255,.07);">
+          <div><p class="stat-num">4.7⭐</p><p class="stat-label">Code Quality</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">52</p><p class="stat-label">Active Repos</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">xyz</p><p class="stat-label">Hackathin Won</p></div>
         </div>
-      </a>
+        <div class="view-profile">View profile <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+      </div>
+    </a>
 
-      <!-- Card 5 -->
-      <a href="victor-profile.html" data-dept="engineering" class="profile-card card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 block fade-in" style="animation-delay:0.25s">
-<div>
-  <img src="images/victor.jpeg" alt="Kryssie" class="w-full h-32 object-cover ">
-  </div>
-        <div class="px-5 pb-5 pt-0 relative">
-          <img src="images/victor.jpeg" alt="Victor Okafor" class="avatar-img" />
-          <h3 class="font-semibold text-gray-900 text-base leading-tight">Victor</h3>
-          <p class="text-xs text-gray-400 mt-0.5 mb-3">Full-Stack Engineer</p>
-          <div class="mb-4">
-            <span class="tag bg-blue-50 text-blue-700">React</span>
-            <span class="tag bg-blue-50 text-blue-700">Node.js</span>
-            <span class="tag bg-blue-50 text-blue-700">GraphQL</span>
-          </div>
-          <div class="border-t border-gray-100 pt-3 flex gap-5 mb-4">
-            <div><p class="text-sm font-semibold text-gray-800">3.3k</p><p class="text-xs text-gray-400">Followers</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">67</p><p class="text-xs text-gray-400">Projects</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">94%</p><p class="text-xs text-gray-400">Reviews</p></div>
-          </div>
-          <div class="flex items-center text-brand text-sm font-medium">View profile <svg class="ml-1.5 w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+    <!-- ── Miracle · data-dept="devops" ── -->
+    <a href="miracle-profile.html" data-dept="devops"
+      class="profile-card fade-in" style="animation-delay:.15s;">
+      <div class="relative banner-coral h-36">
+        <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(15,29,53,.55) 0%,transparent 55%);"></div>
+        <span class="dept-badge">Backend · Full-Stack</span>
+        <div class="absolute bottom-3 left-4 flex items-center gap-1.5 opacity-70">
+          <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
+          </svg>
+          <span class="text-white text-[10px] font-semibold syne">Full-Stack + DevOps</span>
         </div>
-      </a>
-
-      <!-- Card 6 -->
-      <a href="profile-priya.html" data-dept="operations" class="profile-card card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 block fade-in" style="animation-delay:0.30s">
-<div>
-  <img src="images/john.jpeg" alt="Kryssie" class="w-full h-32 object-cover ">
-  </div>
-        <div class="px-5 pb-5 pt-0 relative">
-          <img src="images/john.jpeg" alt="john deo" class="avatar-img" />
-          <h3 class="font-semibold text-gray-900 text-base leading-tight">jogn deo</h3>
-          <p class="text-xs text-gray-400 mt-0.5 mb-3">Head of Operations</p>
-          <div class="mb-4">
-            <span class="tag bg-green-50 text-green-700">Strategy</span>
-            <span class="tag bg-green-50 text-green-700">OKRs</span>
-            <span class="tag bg-green-50 text-green-700">Finance</span>
-          </div>
-          <div class="border-t border-gray-100 pt-3 flex gap-5 mb-4">
-            <div><p class="text-sm font-semibold text-gray-800">6.0k</p><p class="text-xs text-gray-400">Followers</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">8</p><p class="text-xs text-gray-400">Countries</p></div>
-            <div><p class="text-sm font-semibold text-gray-800">14yr</p><p class="text-xs text-gray-400">Experience</p></div>
-          </div>
-          <div class="flex items-center text-brand text-sm font-medium">View profile <svg class="ml-1.5 w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+      </div>
+      <div class="px-5 pb-5 pt-0 relative z-10">
+        <div class="avatar-ring"><img src="images/Miracle Amajama's dp.png" alt="iiceekiing" /></div>
+        <h3 class="syne font-bold text-white text-base leading-tight">iiceekiing</h3>
+        <p class="mt-0.5 mb-3" style="font-family:'Syne',sans-serif;letter-spacing:.06em;text-transform:uppercase;font-size:10px;color:#475569;">Full-Stack Engineer · DevOps</p>
+        <div class="mb-4">
+          <span class="tag" style="background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:#fcd34d;">FastAPI</span>
+          <span class="tag" style="background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:#fcd34d;">Docker</span>
+          <span class="tag" style="background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:#fcd34d;">Django</span>
         </div>
-      </a>
+        <!-- Credibility stats — Full-Stack / DevOps -->
+        <div class="border-t mb-4 pt-3 flex gap-4 items-start" style="border-color:rgba(255,255,255,.07);">
+          <div><p class="stat-num">4.8⭐</p><p class="stat-label">Overall Rating</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">10+</p><p class="stat-label">Apps Deployed</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">99.9%</p><p class="stat-label">Uptime Avg.</p></div>
+        </div>
+        <div class="view-profile">View profile <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+      </div>
+    </a>
 
+  </div><!-- end row 1 -->
+
+
+  <!-- ════════════════════════════════════
+       CARDS — ROW 2 (2 cards, centred)
+  ════════════════════════════════════ -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto mb-8" id="cards-row-2">
+
+    <!-- ── Anita · data-dept="qa" ── -->
+    <a href="anita-profile.html" data-dept="qa"
+      class="profile-card fade-in" style="animation-delay:.20s;">
+      <div class="relative">
+        <img src="images/anita.jpeg" alt="Anita" class="w-full h-36 object-cover" />
+        <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(15,29,53,.75) 0%,transparent 60%);"></div>
+        <span class="dept-badge">QA Engineer</span>
+      </div>
+      <div class="px-5 pb-5 pt-0 relative z-10">
+        <div class="avatar-ring"><img src="images/anita.jpeg" alt="Anita" /></div>
+        <h3 class="syne font-bold text-white text-base leading-tight">Anita</h3>
+        <p class="mt-0.5 mb-3" style="font-family:'Syne',sans-serif;letter-spacing:.06em;text-transform:uppercase;font-size:10px;color:#475569;">Quality Assurance Engineer</p>
+        <div class="mb-4">
+          <span class="tag" style="background:rgba(236,72,153,.12);border-color:rgba(236,72,153,.3);color:#f9a8d4;">Testing</span>
+          <span class="tag" style="background:rgba(236,72,153,.12);border-color:rgba(236,72,153,.3);color:#f9a8d4;">CI/CD QA</span>
+        </div>
+        <!-- Credibility stats — QA Engineer -->
+        <div class="border-t mb-4 pt-3 flex gap-4 items-start" style="border-color:rgba(255,255,255,.07);">
+          <div><p class="stat-num">4.6⭐</p><p class="stat-label">QA Rating</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">300+</p><p class="stat-label">Bugs Caught</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">98%</p><p class="stat-label">Test Coverage</p></div>
+        </div>
+        <div class="view-profile">View profile <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+      </div>
+    </a>
+
+    <!-- ── Victor · data-dept="backend" ── -->
+    <a href="victor-profile.html" data-dept="backend"
+      class="profile-card fade-in" style="animation-delay:.25s;">
+      <div class="relative">
+        <img src="images/victor.jpeg" alt="Victor" class="w-full h-36 object-cover" />
+        <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(15,29,53,.75) 0%,transparent 60%);"></div>
+        <span class="dept-badge">DevOps</span>
+      </div>
+      <div class="px-5 pb-5 pt-0 relative z-10">
+        <div class="avatar-ring"><img src="images/victor.jpeg" alt="Victor" /></div>
+        <h3 class="syne font-bold text-white text-base leading-tight">Victor</h3>
+        <p class="mt-0.5 mb-3" style="font-family:'Syne',sans-serif;letter-spacing:.06em;text-transform:uppercase;font-size:10px;color:#475569;">DevOps Engineer.</p>
+        <div class="mb-4">
+          <span class="tag" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:#93c5fd;">Vercel</span>
+          <span class="tag" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:#93c5fd;">Render</span>
+          <span class="tag" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:#93c5fd;">Git & Github</span>
+          <span class="tag" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:#93c5fd;">Docker</span>
+        </div>
+        <!-- Credibility stats — DevOPs Engineer -->
+        <div class="border-t mb-4 pt-3 flex gap-4 items-start" style="border-color:rgba(255,255,255,.07);">
+          <div><p class="stat-num">4.7⭐</p><p class="stat-label">Peer Rating</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">5+</p><p class="stat-label">Projects Deployed</p></div>
+          <div class="stat-divider"></div>
+          <div><p class="stat-num">2+</p><p class="stat-label">Projects Containerized</p></div>
+        </div>
+        <div class="view-profile">View profile <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></div>
+      </div>
+    </a>
+
+  </div><!-- end row 2 -->
+
+  <!-- Empty state -->
+  <div id="empty-state" style="display:none;" class="flex flex-col items-center justify-center py-20 text-center">
+    <div class="w-14 h-14 rounded-full border-2 mb-4 flex items-center justify-center"
+      style="border-color:rgba(245,158,11,.2);">
+      <svg class="w-6 h-6" style="color:#f59e0b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
     </div>
-  </main>
+    <p class="syne text-slate-400 font-semibold text-sm">No members in this department yet.</p>
+  </div>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-gray-100 bg-white py-8 text-center text-sm text-gray-400">
-    <span class="playfair text-gray-700 font-semibold">Studio<span class="text-brand">.</span></span>
-    <span class="mx-3 text-gray-200">|</span>
-    Built with Tailwind CSS
-  </footer>
+</main>
 
-  <script>
-    function filter(dept) {
-      const cards = document.querySelectorAll('.profile-card');
-      const btns  = document.querySelectorAll('.filter-btn');
-      btns.forEach(b => b.classList.remove('bg-brand','text-white','border-brand'));
-      btns.forEach(b => b.classList.add('bg-white','text-gray-600','border-gray-200'));
-      const active = document.getElementById('btn-' + dept);
-      active.classList.remove('bg-white','text-gray-600','border-gray-200');
-      active.classList.add('bg-brand','text-white','border-brand');
-      cards.forEach(c => {
-        const d = c.getAttribute('data-dept');
-        c.style.display = (dept === 'all' || d === dept) ? 'block' : 'none';
-      });
-    }
-  </script>
+
+<!-- ════════════════════════════════════════════
+     PROJECTS SECTION
+════════════════════════════════════════════ -->
+<section id="projects" class="relative z-10 py-20" style="background:linear-gradient(180deg,var(--ink) 0%,#0c1c36 100%);">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <div class="reveal flex items-center gap-4 mb-3">
+      <span class="section-label">What We've Built</span>
+      <hr class="amber-rule flex-1 opacity-40" />
+    </div>
+    <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+      <h2 class="section-heading text-white" style="font-size:clamp(30px,4.5vw,54px);">
+        Our projects.<br/><span class="amber-text">Shipped &amp; live.</span>
+      </h2>
+      <a href="https://github.com/cyber-7ven" target="_blank" rel="noopener"
+        class="syne text-xs font-bold px-5 py-2.5 rounded-full border self-start sm:self-auto"
+        style="border-color:rgba(245,158,11,.35);color:#f59e0b;"
+        onmouseover="this.style.background='rgba(245,158,11,.08)'"
+        onmouseout="this.style.background=''">All on GitHub →</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+      <!-- ── Project 1: PG Management System ── -->
+      <div class="project-card reveal" style="transition-delay:.05s;">
+        <div class="relative h-48 overflow-hidden" style="background:#0d0d0d;">
+          <svg width="100%" height="100%" viewBox="0 0 400 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="400" height="190" fill="#0d0d0d"/>
+            <rect x="0" y="0" width="100" height="190" fill="#111"/>
+            <rect x="10" y="12" width="16" height="16" rx="3" fill="#3b82f6" opacity=".7"/>
+            <rect x="30" y="15" width="55" height="8" rx="3" fill="#1e3a5f" opacity=".8"/>
+            <rect x="10" y="40" width="80" height="28" rx="5" fill="#1e293b"/>
+            <rect x="16" y="48" width="8" height="8" rx="2" fill="#3b82f6" opacity=".6"/>
+            <rect x="28" y="50" width="40" height="6" rx="2" fill="#94a3b8" opacity=".7"/>
+            <rect x="16" y="78" width="8" height="8" rx="2" fill="#475569" opacity=".5"/>
+            <rect x="28" y="80" width="38" height="5" rx="2" fill="#475569" opacity=".5"/>
+            <rect x="16" y="106" width="8" height="8" rx="2" fill="#475569" opacity=".5"/>
+            <rect x="28" y="108" width="44" height="5" rx="2" fill="#475569" opacity=".5"/>
+            <rect x="100" y="0" width="300" height="32" fill="#141414"/>
+            <rect x="110" y="10" width="50" height="9" rx="3" fill="#1e3a5f"/>
+            <rect x="110" y="30" width="50" height="2" rx="1" fill="#3b82f6"/>
+            <rect x="110" y="42" width="80" height="10" rx="3" fill="#e2e8f0" opacity=".6"/>
+            <rect x="110" y="60" width="82" height="70" rx="8" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>
+            <circle cx="151" cy="95" r="22" fill="none" stroke="#333" stroke-width="8"/>
+            <circle cx="151" cy="95" r="22" fill="none" stroke="#06b6d4" stroke-width="8" stroke-dasharray="69 138" stroke-dashoffset="34"/>
+            <text x="151" y="99" text-anchor="middle" fill="#fff" font-size="8" font-family="monospace">50%</text>
+            <rect x="200" y="60" width="82" height="70" rx="8" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>
+            <circle cx="241" cy="95" r="22" fill="none" stroke="#333" stroke-width="8"/>
+            <circle cx="241" cy="95" r="22" fill="none" stroke="#f59e0b" stroke-width="8" stroke-dasharray="103 138" stroke-dashoffset="34"/>
+            <text x="241" y="99" text-anchor="middle" fill="#fff" font-size="8" font-family="monospace">75%</text>
+            <rect x="290" y="60" width="100" height="70" rx="8" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>
+            <circle cx="340" cy="95" r="22" fill="none" stroke="#333" stroke-width="8"/>
+            <circle cx="340" cy="95" r="22" fill="none" stroke="#ec4899" stroke-width="8" stroke-dasharray="131 138" stroke-dashoffset="34"/>
+            <text x="340" y="99" text-anchor="middle" fill="#fff" font-size="8" font-family="monospace">95%</text>
+            <rect x="110" y="140" width="280" height="8" rx="3" fill="#1e3a5f" opacity=".5"/>
+            <rect x="110" y="154" width="280" height="6" rx="3" fill="#1e3a5f" opacity=".35"/>
+            <rect x="110" y="166" width="180" height="6" rx="3" fill="#1e3a5f" opacity=".25"/>
+          </svg>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(15,29,53,.6) 0%,transparent 50%);"></div>
+          <div class="absolute top-3 left-3">
+            <span class="syne text-[9px] font-bold px-2.5 py-1 rounded-full" style="background:rgba(245,158,11,.9);color:#080f1e;">⭐ FEATURED</span>
+          </div>
+          <div class="absolute top-3 right-3">
+            <span class="syne text-[9px] font-bold px-2.5 py-1 rounded-full" style="background:rgba(16,185,129,.85);color:#fff;">✓ LIVE</span>
+          </div>
+        </div>
+        <div class="p-5">
+          <h3 class="syne font-bold text-white text-base mb-1">PG Management System</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4" style="font-weight:300;">Full-featured hostel/PG dashboard with room tracking, attendance, fee collection analytics, and real-time student updates.</p>
+          <div class="flex flex-wrap gap-1.5 mb-4">
+            <span class="tag" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:#93c5fd;">Tailwind CSS</span>
+            <span class="tag" style="background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:#a5b4fc;">HTML5</span>
+            <span class="tag" style="background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:#6ee7b7;">Git & GitHub</span>
+            <span class="tag" style="background:rgba(14,165,233,.12);border-color:rgba(14,165,233,.3);color:#7dd3fc;">JavaScript</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <a href="https://github.com/iiceekiing/PG-management-system" target="_blank" rel="noopener" class="proj-btn proj-btn-outline">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              Source
+            </a>
+            <a href="https://pg-management-system-seven.vercel.app/" target="_blank" rel="noopener" class="proj-btn proj-btn-amber">
+              Live Demo
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Project 2: Foodie Fries ── -->
+      <div class="project-card reveal" style="transition-delay:.1s;">
+        <div class="relative h-48 overflow-hidden" style="background:#fef9c3;">
+          <svg width="100%" height="100%" viewBox="0 0 400 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="400" height="190" fill="#fef9c3"/>
+            <rect x="0" y="0" width="400" height="30" fill="#fffde7"/>
+            <rect x="14" y="9" width="70" height="12" rx="3" fill="#d97706" opacity=".85"/>
+            <rect x="10" y="38" width="115" height="112" rx="8" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+            <rect x="14" y="42" width="107" height="60" rx="5" fill="#f0ece8"/>
+            <ellipse cx="68" cy="73" rx="26" ry="20" fill="#c2410c" opacity=".35"/>
+            <ellipse cx="68" cy="68" rx="22" ry="18" fill="#b45309" opacity=".55"/>
+            <rect x="14" y="109" width="107" height="8" rx="3" fill="#374151" opacity=".7"/>
+            <rect x="14" y="122" width="75" height="6" rx="2" fill="#9ca3af" opacity=".6"/>
+            <rect x="14" y="133" width="52" height="9" rx="3" fill="#db2777" opacity=".85"/>
+            <rect x="140" y="38" width="115" height="112" rx="8" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+            <rect x="144" y="42" width="107" height="60" rx="5" fill="#fdf4ec"/>
+            <rect x="176" y="46" width="22" height="48" rx="4" fill="#dc2626" opacity=".5"/>
+            <rect x="172" y="86" width="52" height="10" rx="3" fill="#92400e" opacity=".55"/>
+            <rect x="144" y="109" width="107" height="8" rx="3" fill="#374151" opacity=".7"/>
+            <rect x="144" y="122" width="75" height="6" rx="2" fill="#9ca3af" opacity=".6"/>
+            <rect x="144" y="133" width="52" height="9" rx="3" fill="#db2777" opacity=".85"/>
+            <rect x="270" y="38" width="120" height="112" rx="8" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+            <rect x="274" y="42" width="112" height="60" rx="5" fill="#fee2e2"/>
+            <rect x="278" y="46" width="30" height="28" rx="3" fill="#dc2626" opacity=".6"/>
+            <rect x="312" y="46" width="30" height="28" rx="3" fill="#dc2626" opacity=".4"/>
+            <rect x="346" y="46" width="28" height="28" rx="3" fill="#dc2626" opacity=".5"/>
+            <rect x="278" y="80" width="96" height="18" rx="4" fill="#fbbf24" opacity=".6"/>
+            <rect x="274" y="109" width="112" height="8" rx="3" fill="#374151" opacity=".7"/>
+            <rect x="274" y="122" width="75" height="6" rx="2" fill="#9ca3af" opacity=".6"/>
+            <rect x="274" y="133" width="52" height="9" rx="3" fill="#db2777" opacity=".85"/>
+          </svg>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(15,29,53,.45) 0%,transparent 50%);"></div>
+          <div class="absolute top-3 left-3">
+            <span class="syne text-[9px] font-bold px-2.5 py-1 rounded-full" style="background:rgba(245,158,11,.9);color:#080f1e;">🍟 FOOD TECH</span>
+          </div>
+          <div class="absolute top-3 right-3">
+            <span class="syne text-[9px] font-bold px-2.5 py-1 rounded-full" style="background:rgba(16,185,129,.85);color:#fff;">✓ LIVE</span>
+          </div>
+        </div>
+        <div class="p-5">
+          <h3 class="syne font-bold text-white text-base mb-1">Foodie Fries</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4" style="font-weight:300;">Modern food ordering web app with a full menu, cart, and contact flow — built for a Nigerian fast-food brand.</p>
+          <div class="flex flex-wrap gap-1.5 mb-4">
+            <span class="tag" style="background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:#fcd34d;">HTML5</span>
+            <span class="tag" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:#93c5fd;">Git & GitHub</span>
+            <span class="tag" style="background:rgba(14,165,233,.12);border-color:rgba(14,165,233,.3);color:#7dd3fc;">Tailwind CSS</span>
+            <span class="tag" style="background:rgba(234,88,12,.12);border-color:rgba(234,88,12,.3);color:#fdba74;">Vercel</span>
+            <span class="tag" style="background:rgba(234,88,12,.12);border-color:rgba(234,88,12,.3);color:#fdba74;">JavaScript</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <a href="https://github.com/iiceekiing/foodie_fries/" target="_blank" rel="noopener" class="proj-btn proj-btn-outline">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              Source
+            </a>
+            <a href="https://foodie-fries.vercel.app/" target="_blank" rel="noopener" class="proj-btn proj-btn-amber">
+              Live Demo <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Project 3: AgroFarm ── -->
+      <div class="project-card reveal" style="transition-delay:.15s;">
+        <div class="relative h-48 overflow-hidden" style="background:#071a0a;">
+          <svg width="100%" height="100%" viewBox="0 0 400 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="agro-sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a2a40"/>
+                <stop offset="100%" stop-color="#1e3a1e"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="190" fill="url(#agro-sky)"/>
+            <rect x="0" y="112" width="400" height="78" fill="#152e15"/>
+            <rect x="0" y="117" width="400" height="3.5" rx="2" fill="#2d5a2d" opacity=".8"/>
+            <rect x="0" y="127" width="400" height="3.5" rx="2" fill="#2d5a2d" opacity=".65"/>
+            <rect x="0" y="137" width="400" height="3.5" rx="2" fill="#2d5a2d" opacity=".5"/>
+            <rect x="0" y="147" width="400" height="3.5" rx="2" fill="#2d5a2d" opacity=".4"/>
+            <rect x="0" y="157" width="400" height="3" rx="2" fill="#2d5a2d" opacity=".3"/>
+            <rect x="0" y="167" width="400" height="3" rx="2" fill="#2d5a2d" opacity=".2"/>
+            <text x="200" y="42" text-anchor="middle" fill="#e2e8f0" font-size="13" font-family="Georgia,serif" font-weight="bold" opacity=".9">Grow smarter with</text>
+            <text x="200" y="62" text-anchor="middle" fill="#e2e8f0" font-size="13" font-family="Georgia,serif" font-weight="bold" opacity=".9">Our <tspan fill="#f59e0b">AgroFarm</tspan></text>
+            <line x1="156" y1="70" x2="244" y2="70" stroke="#f59e0b" stroke-width="1.5" opacity=".6"/>
+            <circle cx="200" cy="96" r="28" fill="#166534" stroke="#fff" stroke-width="2"/>
+            <circle cx="200" cy="84" r="9" fill="none" stroke="#4ade80" stroke-width="1.5"/>
+            <path d="M196 84 Q200 78 204 84 Q200 90 196 84" fill="#4ade80" opacity=".85"/>
+            <text x="200" y="108" text-anchor="middle" fill="#fff" font-size="8" font-family="sans-serif" font-weight="bold">AgroFarm</text>
+          </svg>
+          <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(7,26,10,.6) 0%,transparent 55%);"></div>
+          <div class="absolute top-3 left-3">
+            <span class="syne text-[9px] font-bold px-2.5 py-1 rounded-full" style="background:rgba(34,197,94,.85);color:#fff;">🌱 AGRI-TECH</span>
+          </div>
+          <div class="absolute top-3 right-3">
+            <span class="syne text-[9px] font-bold px-2.5 py-1 rounded-full" style="background:rgba(16,185,129,.85);color:#fff;">✓ LIVE</span>
+          </div>
+        </div>
+        <div class="p-5">
+          <h3 class="syne font-bold text-white text-base mb-1">AgroFarm</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4" style="font-weight:300;">Smart agricultural platform helping farmers grow smarter with AI-driven crop insights and a community marketplace.</p>
+          <div class="flex flex-wrap gap-1.5 mb-4">
+            <span class="tag" style="background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:#93c5fd;">Tailwind CSS</span>
+            <span class="tag" style="background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:#a5b4fc;">HTML5</span>
+            <span class="tag" style="background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:#6ee7b7;">Git & GitHub</span>
+            <span class="tag" style="background:rgba(14,165,233,.12);border-color:rgba(14,165,233,.3);color:#7dd3fc;">JavaScript</span>
+          <div class="flex items-center gap-2.5">
+            <a href="https://github.com/iiceekiing/agro-farm" target="_blank" rel="noopener" class="proj-btn proj-btn-outline">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              Source
+            </a>
+            <a href="https://iiceekiings-agro-farm-project.vercel.app/" target="_blank" rel="noopener" class="proj-btn proj-btn-amber">
+              Live Demo <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end projects grid -->
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="relative z-10 border-t py-10 text-center" style="border-color:rgba(255,255,255,.06);background:#061e56;">
+  <div class="flex items-center justify-center gap-3 mb-3">
+    <div class="w-7 h-7 rounded-md flex items-center justify-center"
+      style="background:linear-gradient(135deg,#f59e0b,#ea580c);">
+      <span class="syne font-bold text-xs" style="color:#080f1e;">C7</span>
+    </div>
+    <span class="syne font-bold text-white text-sm">Cyber 7ven<span style="color:#f59e0b;">.</span></span>
+  </div>
+  <p class="text-xs text-slate-600 mb-3 syne" style="letter-spacing:.08em;">BUILT WITH TAILWIND CSS &nbsp;·&nbsp; © 2025</p>
+  <div class="flex flex-wrap gap-x-3 gap-y-1 justify-center" style="opacity:.35;">
+    <span class="text-[10px] syne text-slate-400">HTML</span><span class="text-slate-600 text-[10px]">·</span>
+    <span class="text-[10px] syne text-slate-400">CSS</span><span class="text-slate-600 text-[10px]">·</span>
+    <span class="text-[10px] syne text-slate-400">Tailwind</span><span class="text-slate-600 text-[10px]">·</span>
+    <span class="text-[10px] syne text-slate-400">JavaScript</span><span class="text-slate-600 text-[10px]">·</span>
+    <span class="text-[10px] syne text-slate-400">Python</span><span class="text-slate-600 text-[10px]">·</span>
+    <span class="text-[10px] syne text-slate-400">FastAPI</span><span class="text-slate-600 text-[10px]">·</span>
+    <span class="text-[10px] syne text-slate-400">Git</span>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+  /* ── Filter (IDs now match the dept values perfectly) ── */
+  const deptLabels = {
+    all: 'members',
+    design: 'UI designers',
+    engineering: 'frontend engineers',
+    qa: 'QA engineers',
+    devops: 'DevOps engineers',
+    backend: 'backend engineers'
+  };
+
+  function filter(dept) {
+    const allCards  = document.querySelectorAll('.profile-card');
+    const btns      = document.querySelectorAll('.filter-btn');
+    const empty     = document.getElementById('empty-state');
+    const countChip = document.getElementById('count-chip');
+
+    btns.forEach(b => b.classList.remove('active'));
+    const activeBtn = document.getElementById('btn-' + dept);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    let visible = 0;
+    allCards.forEach(c => {
+      const show = dept === 'all' || c.getAttribute('data-dept') === dept;
+      c.style.display = show ? 'block' : 'none';
+      if (show) visible++;
+    });
+
+    countChip.textContent = visible + ' ' + (deptLabels[dept] || dept);
+    empty.style.display = visible === 0 ? 'flex' : 'none';
+  }
+
+  /* ── Scroll reveal ── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => obs.observe(el));
+
+  /* ── Hamburger ── */
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const mobileMenu   = document.getElementById('mobile-menu');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = hamburgerBtn.classList.toggle('open');
+    mobileMenu.classList.toggle('hidden', !open);
+  });
+  function closeMobileMenu() {
+    hamburgerBtn.classList.remove('open');
+    mobileMenu.classList.add('hidden');
+  }
+  window.addEventListener('resize', () => { if (window.innerWidth >= 640) closeMobileMenu(); });
+</script>
+
 </body>
-</head>
 </html>
