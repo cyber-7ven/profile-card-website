@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelvin Achir — Full-Stack Front-end Developer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:     '#0b1526',
+            'navy-2': '#111f38',
+            'navy-3': '#162340',
+            accent:   '#f59e0b',
+            'accent-hover': '#d97706',
+            gold:     '#e8a020',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ── Scrollbar ── */
+    * { scrollbar-width: thin; scrollbar-color: #f59e0b #0b1526; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 4px; }
+
+    /* ── Profile ring ── */
+    .profile-ring {
+      background: conic-gradient(from 0deg, #f59e0b, #ea580c, #fbbf24, #ea580c, #f59e0b);
+      padding: 3px;
+      border-radius: 9999px;
+      display: inline-block;
+    }
+
+    /* ── Accordion ── */
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .accordion-body.open { max-height: 600px; }
+    .accordion-chevron { transition: transform 0.3s ease; }
+    .accordion-chevron.open { transform: rotate(180deg); }
+
+    /* ── Project card ── */
+    .project-card {
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    }
+
+    /* ── Filter tabs ── */
+    .filter-tab {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .filter-tab.active {
+      background: #f59e0b;
+      color: #0b1526;
+      font-weight: 700;
+    }
+    .filter-tab:not(.active):hover {
+      border-color: #f59e0b;
+      color: #f59e0b;
+    }
+
+    /* ── Stat card gradient ── */
+    .stat-blue  { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); }
+    .stat-amber { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); }
+    .stat-rose  { background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%); }
+
+    /* ── Send button gradient ── */
+    .btn-send {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    }
+    .btn-send:hover { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); }
+
+    /* ── Resume button gradient ── */
+    .btn-resume {
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    }
+    .btn-resume:hover { background: linear-gradient(135deg, #d97706 0%, #c2410c 100%); }
+
+    /* ── Placeholder screenshot ── */
+    .screenshot-placeholder {
+      width: 100%; height: 190px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Tech badge hover ── */
+    .tech-badge {
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+    .tech-badge:hover { transform: translateY(-2px); }
+
+    /* Smooth scroll for right panel */
+    #right-panel { scroll-behavior: smooth; }
+
+    /* Hide mobile sidebar toggle on desktop */
+    @media (min-width: 1024px) {
+      #sidebar-toggle { display: none; }
+      #left-panel { display: flex !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 font-sans text-gray-900 antialiased">
+
+<!-- ═══════════════════════════════════════════
+     MOBILE HEADER
+═══════════════════════════════════════════ -->
+<header class="lg:hidden fixed top-0 inset-x-0 z-50 bg-white border-b border-gray-200 flex items-center justify-between px-4 py-3 shadow-sm">
+  <div class="flex items-center gap-2">
+    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm">MA</div>
+    <span class="font-semibold text-sm text-gray-800">Kelvin Achir</span>
+  </div>
+  <button id="sidebar-toggle"
+    class="w-9 h-9 rounded-lg border border-gray-200 flex flex-col items-center justify-center gap-1.5 hover:border-amber-400 transition-colors"
+    aria-label="Toggle sidebar">
+    <span class="w-5 h-0.5 bg-gray-700 rounded transition-all" id="bar1"></span>
+    <span class="w-5 h-0.5 bg-gray-700 rounded transition-all" id="bar2"></span>
+    <span class="w-5 h-0.5 bg-gray-700 rounded transition-all" id="bar3"></span>
+  </button>
+</header>
+
+
+<!-- ═══════════════════════════════════════════
+     MAIN LAYOUT
+═══════════════════════════════════════════ -->
+<div class="flex min-h-screen lg:h-screen lg:overflow-hidden pt-14 lg:pt-0">
+
+  <!-- ────────────────────────────────────────
+       LEFT PANEL — Sidebar
+  ──────────────────────────────────────── -->
+  <aside
+    id="left-panel"
+    class="hidden fixed lg:sticky top-0 inset-0 lg:inset-auto z-40 lg:z-auto w-full lg:w-[360px] xl:w-[390px] flex-col bg-white border-r border-gray-100 overflow-y-auto lg:flex-shrink-0 shadow-lg lg:shadow-none"
+  >
+    <!-- Overlay close for mobile -->
+    <div id="sidebar-overlay" class="absolute inset-0 bg-black/40 lg:hidden cursor-pointer" style="z-index:-1;" onclick="closeSidebar()"></div>
+
+    <div class="relative z-10 bg-white min-h-full flex flex-col p-6 gap-5">
+
+      <!-- Back to Home -->
+      <div class="flex justify-end lg:hidden">
+        <a href="index.html"
+          class="flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-amber-500 transition-colors">
+          ← Back to Home
+        </a>
+      </div>
+
+      <!-- ── Profile ── -->
+      <div class="flex flex-col items-center text-center gap-3">
+        <!-- Avatar ring -->
+        <div class="profile-ring">
+          <div class="w-28 h-28 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 overflow-hidden flex items-center justify-center">
+            <!-- Replace src with actual photo -->
+            <svg class="w-16 h-16 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div>
+          <h1 class="text-2xl font-extrabold tracking-tight">
+            <span class="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Kelvin</span>
+            <span class="text-gray-900"> Achir</span>
+          </h1>
+          <p class="text-sm text-gray-500 font-medium mt-0.5">Full-Stack Front-end Developer</p>
+        </div>
+
+        <!-- Status badge -->
+        <div class="inline-flex items-center gap-1.5 border border-green-300 rounded-full px-3 py-1 text-xs font-semibold text-green-700 bg-green-50">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+          Open to Opportunities
+        </div>
+
+        <!-- Quote -->
+        <p class="text-xs text-gray-500 italic leading-relaxed px-2 border-l-2 border-amber-400 text-left">
+          "Building robust, scalable systems from pixel to server."
+        </p>
+      </div>
+
+      <!-- ── Stats ── -->
+      <div class="grid grid-cols-3 gap-2">
+        <div class="stat-blue rounded-xl p-3 text-center">
+          <p class="text-xl font-extrabold text-blue-600">3+</p>
+          <p class="text-[10px] font-medium text-blue-500 leading-tight mt-0.5">Years<br/>Exp.</p>
+        </div>
+        <div class="stat-amber rounded-xl p-3 text-center">
+          <p class="text-xl font-extrabold text-amber-600">10+</p>
+          <p class="text-[10px] font-medium text-amber-500 leading-tight mt-0.5">Projects</p>
+        </div>
+        <div class="stat-rose rounded-xl p-3 text-center">
+          <p class="text-xl font-extrabold text-rose-500">5+</p>
+          <p class="text-[10px] font-medium text-rose-400 leading-tight mt-0.5">Stacks</p>
+        </div>
+      </div>
+
+      <!-- ── Social Links ── -->
+      <div class="flex items-center gap-2">
+        <a href="mailto:miracleamajama@gmail.com"
+          class="flex-1 flex items-center justify-center gap-1.5 border border-gray-200 rounded-lg py-2 text-xs font-semibold text-gray-600 hover:border-amber-400 hover:text-amber-500 transition-all">
+          <!-- Email icon -->
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          Email
+        </a>
+        <a href="https://github.com/iiceekiing" target="_blank" rel="noopener"
+          class="flex-1 flex items-center justify-center gap-1.5 border border-gray-200 rounded-lg py-2 text-xs font-semibold text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-all">
+          <!-- GitHub icon -->
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="https://linkedin.com/in/miracle-amajama" target="_blank" rel="noopener"
+          class="flex-1 flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 rounded-lg py-2 text-xs font-semibold text-white transition-all">
+          <!-- LinkedIn icon -->
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          LinkedIn
+        </a>
+      </div>
+
+      <!-- ── Location ── -->
+      <div class="flex items-center gap-1.5 text-xs text-gray-500">
+        <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+        Lagos, Nigeria
+      </div>
+
+      <!-- ── Bio ── -->
+      <p class="text-xs text-gray-600 leading-relaxed">
+        I recently started learning HTML and CSS, and I'm currently exploring JavaScript to make my websites interactive.
+
+I enjoy building projects and improving my skills step by step.
+My goal is to become a skilled and creative developer.
+      </p>
+
+      <!-- ── Accordion Sections ── -->
+      <div class="flex flex-col gap-1 divide-y divide-gray-100">
+
+        <!-- Tech Stack -->
+        <div class="accordion">
+          <button onclick="toggleAccordion(this)" class="accordion-trigger w-full flex items-center justify-between py-3 text-sm font-semibold text-gray-800 hover:text-amber-500 transition-colors">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+              Tech Stack
+            </span>
+            <svg class="accordion-chevron w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="accordion-body">
+            <div class="flex flex-wrap gap-1.5 pb-4">
+              <span class="tech-badge bg-blue-50 text-blue-700 border border-blue-200 rounded-md px-2 py-1 text-[10px] font-semibold">Python</span>
+              <span class="tech-badge bg-green-50 text-green-700 border border-green-200 rounded-md px-2 py-1 text-[10px] font-semibold">FastAPI</span>
+              <span class="tech-badge bg-cyan-50 text-cyan-700 border border-cyan-200 rounded-md px-2 py-1 text-[10px] font-semibold">React</span>
+              <span class="tech-badge bg-slate-50 text-slate-700 border border-slate-200 rounded-md px-2 py-1 text-[10px] font-semibold">Next.js</span>
+              <span class="tech-badge bg-purple-50 text-purple-700 border border-purple-200 rounded-md px-2 py-1 text-[10px] font-semibold">NestJS</span>
+              <span class="tech-badge bg-orange-50 text-orange-700 border border-orange-200 rounded-md px-2 py-1 text-[10px] font-semibold">HTML</span>
+              <span class="tech-badge bg-pink-50 text-pink-700 border border-pink-200 rounded-md px-2 py-1 text-[10px] font-semibold">CSS</span>
+              <span class="tech-badge bg-sky-50 text-sky-700 border border-sky-200 rounded-md px-2 py-1 text-[10px] font-semibold">Tailwind CSS</span>
+              <span class="tech-badge bg-amber-50 text-amber-700 border border-amber-200 rounded-md px-2 py-1 text-[10px] font-semibold">PostgreSQL</span>
+              <span class="tech-badge bg-red-50 text-red-700 border border-red-200 rounded-md px-2 py-1 text-[10px] font-semibold">Docker</span>
+              <span class="tech-badge bg-gray-50 text-gray-700 border border-gray-200 rounded-md px-2 py-1 text-[10px] font-semibold">Git / GitHub</span>
+              <span class="tech-badge bg-lime-50 text-lime-700 border border-lime-200 rounded-md px-2 py-1 text-[10px] font-semibold">Bash Scripting</span>
+              <span class="tech-badge bg-teal-50 text-teal-700 border border-teal-200 rounded-md px-2 py-1 text-[10px] font-semibold">Django</span>
+              <span class="tech-badge bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md px-2 py-1 text-[10px] font-semibold">TypeScript</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="accordion">
+          <button onclick="toggleAccordion(this)" class="accordion-trigger w-full flex items-center justify-between py-3 text-sm font-semibold text-gray-800 hover:text-amber-500 transition-colors">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              Experience
+            </span>
+            <svg class="accordion-chevron w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="accordion-body">
+            <div class="flex flex-col gap-3 pb-4">
+              <div class="flex gap-3">
+                <div class="w-1 rounded-full bg-gradient-to-b from-amber-400 to-orange-400 flex-shrink-0"></div>
+                <div>
+                  <p class="text-xs font-bold text-gray-800">Full-Stack Engineer</p>
+                  <p class="text-[10px] text-amber-600 font-medium">Freelance · Remote</p>
+                  <p class="text-[10px] text-gray-400 mt-0.5">2022 – Present</p>
+                  <p class="text-[10px] text-gray-500 mt-1 leading-relaxed">Designing and building full-stack applications for clients across various industries using React, FastAPI, and Docker.</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <div class="w-1 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 flex-shrink-0"></div>
+                <div>
+                  <p class="text-xs font-bold text-gray-800">Backend Developer Intern</p>
+                  <p class="text-[10px] text-blue-600 font-medium">TechCorp Ltd · Lagos</p>
+                  <p class="text-[10px] text-gray-400 mt-0.5">2021 – 2022</p>
+                  <p class="text-[10px] text-gray-500 mt-1 leading-relaxed">Built and maintained RESTful APIs using Django and PostgreSQL. Improved API response time by 40%.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Education -->
+        <div class="accordion">
+          <button onclick="toggleAccordion(this)" class="accordion-trigger w-full flex items-center justify-between py-3 text-sm font-semibold text-gray-800 hover:text-amber-500 transition-colors">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 7l-9-5 9-5 9 5-9 5zm0-7v7"/>
+              </svg>
+              Education
+            </span>
+            <svg class="accordion-chevron w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="accordion-body">
+            <div class="pb-4 flex gap-3">
+              <div class="w-1 rounded-full bg-gradient-to-b from-purple-400 to-purple-600 flex-shrink-0"></div>
+              <div>
+                <p class="text-xs font-bold text-gray-800">B.Sc. Computer Science</p>
+                <p class="text-[10px] text-purple-600 font-medium">University of Lagos</p>
+                <p class="text-[10px] text-gray-400 mt-0.5">2018 – 2022</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Certifications -->
+        <div class="accordion">
+          <button onclick="toggleAccordion(this)" class="accordion-trigger w-full flex items-center justify-between py-3 text-sm font-semibold text-gray-800 hover:text-amber-500 transition-colors">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+              </svg>
+              Certifications
+            </span>
+            <svg class="accordion-chevron w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="accordion-body">
+            <div class="flex flex-col gap-2 pb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                <p class="text-[10px] text-gray-700 font-medium">AWS Certified Cloud Practitioner</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                <p class="text-[10px] text-gray-700 font-medium">Meta Front-End Developer Certificate</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                <p class="text-[10px] text-gray-700 font-medium">Docker Certified Associate</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end accordions -->
+
+      <!-- ── Download Résumé ── -->
+      <a href="#" download
+        class="btn-resume flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white shadow-md hover:shadow-lg transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        Download Résumé
+      </a>
+
+      <!-- ── Get In Touch ── -->
+      <div>
+        <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2 mb-3">
+          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          Get In Touch
+        </h3>
+        <div class="flex flex-col gap-2">
+          <input type="text" placeholder="Your Name"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-100 transition-all" />
+          <input type="email" placeholder="your.email@example.com"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-100 transition-all" />
+          <input type="text" placeholder="Subject"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-100 transition-all" />
+          <textarea rows="3" placeholder="Your message..."
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-100 transition-all resize-none"></textarea>
+          <button
+            class="btn-send flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white shadow-md hover:shadow-lg transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            Send Message
+          </button>
+          <p class="text-[10px] text-gray-400 text-center leading-relaxed">This form sends emails directly to Miracle's Gmail account.<br/>Messages are delivered instantly!</p>
+        </div>
+      </div>
+
+    </div><!-- end inner padding -->
+  </aside><!-- end left panel -->
+
+
+  <!-- ────────────────────────────────────────
+       RIGHT PANEL — Projects
+  ──────────────────────────────────────── -->
+  <main id="right-panel" class="flex-1 bg-navy overflow-y-auto">
+
+    <!-- ── Right Panel Header ── -->
+    <div class="sticky top-0 z-30 bg-navy border-b border-navy-2 px-6 py-4 flex items-center justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-extrabold text-white tracking-tight">Projects</h2>
+        <p class="text-[11px] text-blue-300 font-mono mt-0.5">6 projects showcased</p>
+      </div>
+
+      <!-- Back to Home (desktop) -->
+      <a href="index.html"
+        class="hidden lg:flex items-center gap-2 border border-amber-500/40 hover:border-amber-400 text-amber-400 hover:text-amber-300 rounded-lg px-4 py-2 text-xs font-semibold transition-all">
+        ← Back to Home
+      </a>
+
+      <!-- Search (decorative) -->
+      <div class="relative hidden sm:flex items-center">
+        <input type="text" placeholder="Search projects..."
+          class="bg-navy-2 border border-white/10 rounded-lg pl-8 pr-4 py-2 text-xs text-gray-300 placeholder-gray-500 focus:outline-none focus:border-amber-400/50 w-44 transition-all" />
+        <svg class="w-3.5 h-3.5 text-gray-500 absolute left-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ── Filter Tabs ── -->
+    <div class="px-6 pt-4 pb-2">
+      <div class="flex gap-2 flex-wrap">
+        <button class="filter-tab active border border-amber-400/0 rounded-full px-3 py-1.5 text-[11px] font-semibold text-navy flex items-center gap-1.5">
+          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          All Projects
+        </button>
+        <button class="filter-tab border border-white/15 text-gray-400 rounded-full px-3 py-1.5 text-[11px] font-medium">Python</button>
+        <button class="filter-tab border border-white/15 text-gray-400 rounded-full px-3 py-1.5 text-[11px] font-medium">FastAPI</button>
+        <button class="filter-tab border border-white/15 text-gray-400 rounded-full px-3 py-1.5 text-[11px] font-medium">HTML</button>
+        <button class="filter-tab border border-white/15 text-gray-400 rounded-full px-3 py-1.5 text-[11px] font-medium">CSS</button>
+        <button class="filter-tab border border-white/15 text-gray-400 rounded-full px-3 py-1.5 text-[11px] font-medium">Tailwind CSS</button>
+        <button class="filter-tab border border-white/15 text-gray-400 rounded-full px-3 py-1.5 text-[11px] font-medium">Git / GitHub</button>
+        <button class="filter-tab border border-white/15 text-gray-400 rounded-full px-3 py-1.5 text-[11px] font-medium">Docker</button>
+        <button class="filter-tab border border-white/15 text-gray-400 rounded-full px-3 py-1.5 text-[11px] font-medium">Bash Scripting</button>
+      </div>
+    </div>
+
+    <!-- ── Projects Section ── -->
+    <div class="px-6 py-5">
+
+      <!-- Stack 01 -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-navy-3 border border-white/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-white">Stack 01</p>
+              <p class="text-[10px] text-gray-400 font-mono">React · Next.js · NestJS · PostgreSQL</p>
+            </div>
+          </div>
+          <span class="text-[10px] text-gray-500 font-medium">2 projects</span>
+        </div>
+
+        <!-- Stack 01 subtitle -->
+        <p class="text-[10px] text-gray-500 mb-4 ml-1">
+          Frontend: React + Next.js &nbsp;|&nbsp; Backend: NestJS &nbsp;|&nbsp; Database: PostgreSQL &nbsp;|&nbsp; Container: Docker
+        </p>
+
+        <!-- Cards grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- Card: HMS Dashboard -->
+          <div class="project-card bg-navy-2 rounded-2xl overflow-hidden border border-white/8">
+            <!-- Screenshot placeholder -->
+            <div class="relative">
+              <div class="screenshot-placeholder"
+                style="background: linear-gradient(135deg, #0f2744 0%, #0a1f3a 50%, #071529 100%); color: #64748b;">
+                <!-- Simulated dashboard UI -->
+                <svg width="100%" height="190" viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="380" height="190" fill="#0a1f3a"/>
+                  <!-- Sidebar -->
+                  <rect x="0" y="0" width="70" height="190" fill="#071529"/>
+                  <rect x="8" y="15" width="54" height="8" rx="4" fill="#1e3a5f"/>
+                  <rect x="8" y="32" width="54" height="6" rx="3" fill="#1e3a5f" opacity="0.6"/>
+                  <rect x="8" y="46" width="54" height="6" rx="3" fill="#1e3a5f" opacity="0.4"/>
+                  <rect x="8" y="60" width="54" height="6" rx="3" fill="#1e3a5f" opacity="0.4"/>
+                  <rect x="8" y="74" width="54" height="6" rx="3" fill="#f59e0b" opacity="0.8"/>
+                  <!-- Main area header -->
+                  <rect x="80" y="10" width="100" height="10" rx="4" fill="#1e3a5f"/>
+                  <rect x="80" y="28" width="60" height="6" rx="3" fill="#1e3a5f" opacity="0.5"/>
+                  <!-- Stat cards -->
+                  <rect x="80" y="45" width="68" height="50" rx="8" fill="#0f2744" stroke="#1e3a5f" stroke-width="1"/>
+                  <circle cx="114" cy="70" r="18" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="70 113"/>
+                  <rect x="160" y="45" width="68" height="50" rx="8" fill="#0f2744" stroke="#1e3a5f" stroke-width="1"/>
+                  <circle cx="194" cy="70" r="18" fill="none" stroke="#06b6d4" stroke-width="4" stroke-dasharray="85 113"/>
+                  <rect x="240" y="45" width="68" height="50" rx="8" fill="#0f2744" stroke="#1e3a5f" stroke-width="1"/>
+                  <circle cx="274" cy="70" r="18" fill="none" stroke="#10b981" stroke-width="4" stroke-dasharray="107 113"/>
+                  <rect x="320" y="45" width="50" height="50" rx="8" fill="#0f2744" stroke="#1e3a5f" stroke-width="1"/>
+                  <!-- Table rows -->
+                  <rect x="80" y="108" width="290" height="8" rx="3" fill="#1e3a5f" opacity="0.7"/>
+                  <rect x="80" y="122" width="290" height="6" rx="3" fill="#1e3a5f" opacity="0.4"/>
+                  <rect x="80" y="133" width="290" height="6" rx="3" fill="#1e3a5f" opacity="0.4"/>
+                  <rect x="80" y="144" width="290" height="6" rx="3" fill="#1e3a5f" opacity="0.4"/>
+                  <rect x="80" y="155" width="290" height="6" rx="3" fill="#1e3a5f" opacity="0.4"/>
+                  <rect x="80" y="166" width="290" height="6" rx="3" fill="#1e3a5f" opacity="0.4"/>
+                  <rect x="80" y="177" width="290" height="6" rx="3" fill="#1e3a5f" opacity="0.3"/>
+                </svg>
+              </div>
+              <!-- Badges -->
+              <div class="absolute top-2 left-2 flex gap-1.5">
+                <span class="bg-amber-400 text-navy text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">⭐ Featured</span>
+              </div>
+              <div class="absolute top-2 right-2">
+                <span class="bg-green-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">✓ Completed</span>
+              </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="p-4">
+              <h3 class="text-sm font-bold text-white mb-1">HMS Dashboard</h3>
+              <p class="text-[11px] text-gray-400 leading-relaxed mb-3">Hospital Management System with attendance tracking, student records, and real-time analytics dashboard.</p>
+              <!-- Tech tags -->
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">React</span>
+                <span class="bg-slate-500/10 border border-slate-400/30 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Next.js</span>
+                <span class="bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">NestJS</span>
+                <span class="bg-blue-500/10 border border-blue-500/30 text-blue-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">PostgreSQL</span>
+                <span class="bg-sky-500/10 border border-sky-500/30 text-sky-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Docker</span>
+              </div>
+              <!-- Actions -->
+              <div class="flex items-center gap-2">
+                <a href="https://github.com/iiceekiing/hms-dashboard" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-white transition-all">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  Source
+                </a>
+                <a href="#" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-amber-400/50 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-amber-300 transition-all">
+                  Live Demo
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+                <span class="ml-auto w-2 h-2 rounded-full bg-amber-400"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Vintique -->
+          <div class="project-card bg-navy-2 rounded-2xl overflow-hidden border border-white/8">
+            <div class="relative">
+              <div class="screenshot-placeholder"
+                style="background: linear-gradient(135deg, #3d1a08 0%, #2d1006 50%, #1a0800 100%); color: #64748b;">
+                <svg width="100%" height="190" viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="380" height="190" fill="#1a0800"/>
+                  <!-- Nav -->
+                  <rect x="0" y="0" width="380" height="35" fill="#2d1006"/>
+                  <rect x="12" y="12" width="60" height="12" rx="4" fill="#c2410c" opacity="0.8"/>
+                  <rect x="270" y="10" width="50" height="14" rx="6" fill="#ea580c"/>
+                  <!-- Hero image area -->
+                  <rect x="0" y="35" width="220" height="110" fill="#3d1a08"/>
+                  <text x="110" y="95" text-anchor="middle" fill="#c2410c" font-size="11" font-family="serif" opacity="0.7">Vintique</text>
+                  <text x="110" y="112" text-anchor="middle" fill="#92400e" font-size="7" opacity="0.6">Every vintage piece carries a century of stories</text>
+                  <!-- Sign in form -->
+                  <rect x="230" y="35" width="150" height="110" fill="#2d1006"/>
+                  <rect x="242" y="50" width="126" height="8" rx="3" fill="#3d1a08"/>
+                  <rect x="242" y="65" width="126" height="14" rx="4" fill="#3d1a08" stroke="#c2410c" stroke-width="0.5"/>
+                  <rect x="242" y="84" width="126" height="14" rx="4" fill="#3d1a08" stroke="#3d1a08" stroke-width="0.5"/>
+                  <rect x="242" y="105" width="126" height="18" rx="6" fill="#ea580c"/>
+                  <text x="305" y="118" text-anchor="middle" fill="white" font-size="7">Sign In</text>
+                  <!-- Product cards bottom -->
+                  <rect x="0" y="148" width="85" height="42" rx="4" fill="#2d1006"/>
+                  <rect x="92" y="148" width="85" height="42" rx="4" fill="#2d1006"/>
+                  <rect x="184" y="148" width="85" height="42" rx="4" fill="#2d1006"/>
+                  <rect x="276" y="148" width="100" height="42" rx="4" fill="#2d1006"/>
+                </svg>
+              </div>
+              <div class="absolute top-2 left-2 flex gap-1.5">
+                <span class="bg-amber-400 text-navy text-[9px] font-bold px-2 py-0.5 rounded-full">⭐ Featured</span>
+              </div>
+              <div class="absolute top-2 right-2">
+                <span class="bg-green-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">✓ Completed</span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-sm font-bold text-white mb-1">Vintique</h3>
+              <p class="text-[11px] text-gray-400 leading-relaxed mb-3">A curated vintage e-commerce platform with authentication, product discovery, and a rich warm aesthetic.</p>
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">React</span>
+                <span class="bg-slate-500/10 border border-slate-400/30 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Next.js</span>
+                <span class="bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">NestJS</span>
+                <span class="bg-blue-500/10 border border-blue-500/30 text-blue-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">PostgreSQL</span>
+                <span class="bg-purple-500/10 border border-purple-500/30 text-purple-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Supabase</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com/iiceekiing/vintique" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-white transition-all">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  Source
+                </a>
+                <a href="#" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-amber-400/50 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-amber-300 transition-all">
+                  Live Demo
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+                <span class="ml-auto w-2 h-2 rounded-full bg-amber-400"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- end Stack 01 -->
+
+      <!-- Stack 02 -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-navy-3 border border-white/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-white">Stack 02</p>
+              <p class="text-[10px] text-gray-400 font-mono">React · FastAPI · PostgreSQL · Docker · Python</p>
+            </div>
+          </div>
+          <span class="text-[10px] text-gray-500 font-medium">2 projects</span>
+        </div>
+        <p class="text-[10px] text-gray-500 mb-4 ml-1">
+          Frontend: React &nbsp;|&nbsp; Backend: FastAPI &nbsp;|&nbsp; Database: PostgreSQL &nbsp;|&nbsp; Task Queue: Celery · Redis
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- Card: TaskFlow -->
+          <div class="project-card bg-navy-2 rounded-2xl overflow-hidden border border-white/8">
+            <div class="relative">
+              <div class="screenshot-placeholder"
+                style="background: linear-gradient(135deg, #0d2233 0%, #091a26 50%, #050e18 100%);">
+                <svg width="100%" height="190" viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="380" height="190" fill="#091a26"/>
+                  <!-- Header -->
+                  <rect x="0" y="0" width="380" height="36" fill="#0d2233"/>
+                  <rect x="10" y="12" width="70" height="12" rx="4" fill="#1e4060"/>
+                  <rect x="280" y="10" width="90" height="16" rx="6" fill="#f59e0b" opacity="0.8"/>
+                  <!-- Week stats row -->
+                  <rect x="10" y="48" width="80" height="55" rx="8" fill="#0d2233" stroke="#1e3a5f" stroke-width="1"/>
+                  <rect x="105" y="48" width="80" height="55" rx="8" fill="#0d2233" stroke="#1e3a5f" stroke-width="1"/>
+                  <rect x="200" y="48" width="80" height="55" rx="8" fill="#0d2233" stroke="#1e3a5f" stroke-width="1"/>
+                  <rect x="295" y="48" width="75" height="55" rx="8" fill="#0d2233" stroke="#1e3a5f" stroke-width="1"/>
+                  <!-- Icon dots -->
+                  <circle cx="50" cy="62" r="6" fill="#06b6d4" opacity="0.6"/>
+                  <circle cx="145" cy="62" r="6" fill="#10b981" opacity="0.6"/>
+                  <circle cx="240" cy="62" r="6" fill="#f59e0b" opacity="0.6"/>
+                  <circle cx="333" cy="62" r="6" fill="#8b5cf6" opacity="0.6"/>
+                  <!-- Modal overlay hint -->
+                  <rect x="60" y="110" width="260" height="75" rx="8" fill="#0d2233" stroke="#1e4060" stroke-width="1"/>
+                  <rect x="72" y="120" width="80" height="7" rx="3" fill="#1e3a5f"/>
+                  <rect x="72" y="133" width="236" height="10" rx="4" fill="#0f2744" stroke="#1e4060" stroke-width="0.5"/>
+                  <rect x="72" y="148" width="236" height="10" rx="4" fill="#0f2744" stroke="#1e4060" stroke-width="0.5"/>
+                  <rect x="72" y="163" width="80" height="14" rx="5" fill="#f59e0b" opacity="0.7"/>
+                  <rect x="218" y="163" width="90" height="14" rx="5" fill="#1e3a5f"/>
+                </svg>
+              </div>
+              <div class="absolute top-2 left-2">
+                <span class="bg-amber-400 text-navy text-[9px] font-bold px-2 py-0.5 rounded-full">⭐ Featured</span>
+              </div>
+              <div class="absolute top-2 right-2">
+                <span class="bg-green-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">✓ Completed</span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-sm font-bold text-white mb-1">TaskFlow</h3>
+              <p class="text-[11px] text-gray-400 leading-relaxed mb-3">AI-Powered Project Manager with Kanban and Gantt charts.</p>
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">React</span>
+                <span class="bg-green-500/10 border border-green-500/30 text-green-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">FastAPI</span>
+                <span class="bg-blue-500/10 border border-blue-500/30 text-blue-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">PostgreSQL</span>
+                <span class="bg-sky-500/10 border border-sky-500/30 text-sky-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Docker</span>
+                <span class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Python</span>
+                <span class="bg-purple-500/10 border border-purple-500/30 text-purple-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">AI</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com/iiceekiing/taskflow" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-white transition-all">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  Source
+                </a>
+                <a href="#" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-amber-400/50 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-amber-300 transition-all">
+                  Live Demo
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+                <span class="ml-auto w-2 h-2 rounded-full bg-amber-400"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: PulseAPI -->
+          <div class="project-card bg-navy-2 rounded-2xl overflow-hidden border border-white/8">
+            <div class="relative">
+              <div class="screenshot-placeholder"
+                style="background: linear-gradient(135deg, #0e1f3a 0%, #091629 50%, #050c1a 100%);">
+                <svg width="100%" height="190" viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="380" height="190" fill="#091629"/>
+                  <!-- Pattern selector header -->
+                  <rect x="0" y="0" width="380" height="30" fill="#0e1f3a"/>
+                  <rect x="10" y="9" width="100" height="12" rx="4" fill="#1e3a5f"/>
+                  <rect x="290" y="7" width="30" height="16" rx="4" fill="#3b82f6" opacity="0.8"/>
+                  <rect x="324" y="7" width="30" height="16" rx="4" fill="#1e3a5f"/>
+                  <rect x="358" y="7" width="14" height="16" rx="4" fill="#1e3a5f"/>
+                  <!-- Pattern diagram area -->
+                  <rect x="10" y="38" width="220" height="80" rx="8" fill="#0e1f3a" stroke="#1e3a5f" stroke-width="1"/>
+                  <!-- Flow nodes -->
+                  <rect x="30" y="58" width="40" height="20" rx="5" fill="#3b82f6" opacity="0.7"/>
+                  <rect x="100" y="58" width="70" height="20" rx="5" fill="#1d4ed8" opacity="0.7"/>
+                  <rect x="190" y="58" width="30" height="20" rx="5" fill="#1e40af" opacity="0.7"/>
+                  <line x1="70" y1="68" x2="100" y2="68" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+                  <line x1="170" y1="68" x2="190" y2="68" stroke="#3b82f6" stroke-width="1.5" opacity="0.5"/>
+                  <!-- Code console -->
+                  <rect x="240" y="38" width="130" height="80" rx="8" fill="#030712" stroke="#1e3a5f" stroke-width="1"/>
+                  <rect x="240" y="38" width="130" height="20" rx="8" fill="#111827"/>
+                  <rect x="248" y="45" width="40" height="6" rx="3" fill="#374151"/>
+                  <rect x="364" y="43" width="4" height="10" rx="2" fill="#ef4444" opacity="0.7"/>
+                  <rect x="248" y="65" width="100" height="5" rx="2" fill="#1e3a5f" opacity="0.5"/>
+                  <rect x="248" y="75" width="80" height="5" rx="2" fill="#10b981" opacity="0.4"/>
+                  <rect x="248" y="85" width="60" height="5" rx="2" fill="#1e3a5f" opacity="0.5"/>
+                  <rect x="248" y="100" width="80" height="12" rx="4" fill="#10b981" opacity="0.7"/>
+                  <!-- Quiz card bottom -->
+                  <rect x="10" y="128" width="360" height="52" rx="8" fill="#0e1f3a" stroke="#1e3a5f" stroke-width="1"/>
+                  <rect x="20" y="138" width="120" height="8" rx="3" fill="#1e3a5f"/>
+                  <rect x="20" y="152" width="240" height="7" rx="3" fill="#0f2744"/>
+                  <rect x="20" y="164" width="100" height="10" rx="4" fill="#0f2744" stroke="#10b981" stroke-width="0.5"/>
+                  <rect x="20" y="164" width="100" height="10" rx="4" fill="#10b981" opacity="0.1"/>
+                  <text x="70" y="172" text-anchor="middle" fill="#10b981" font-size="5.5">Singleton</text>
+                </svg>
+              </div>
+              <div class="absolute top-2 left-2">
+                <span class="bg-amber-400 text-navy text-[9px] font-bold px-2 py-0.5 rounded-full">⭐ Featured</span>
+              </div>
+              <div class="absolute top-2 right-2">
+                <span class="bg-green-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">✓ Completed</span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-sm font-bold text-white mb-1">PulseAPI</h3>
+              <p class="text-[11px] text-gray-400 leading-relaxed mb-3">Developer Analytics Platform with real-time metrics and Celery workers.</p>
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">React</span>
+                <span class="bg-green-500/10 border border-green-500/30 text-green-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">FastAPI</span>
+                <span class="bg-blue-500/10 border border-blue-500/30 text-blue-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">PostgreSQL</span>
+                <span class="bg-sky-500/10 border border-sky-500/30 text-sky-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Docker</span>
+                <span class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Python</span>
+                <span class="bg-orange-500/10 border border-orange-500/30 text-orange-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Analytics</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com/iiceekiing/pulseapi" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-white transition-all">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  Source
+                </a>
+                <a href="#" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-amber-400/50 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-amber-300 transition-all">
+                  Live Demo
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+                <span class="ml-auto w-2 h-2 rounded-full bg-amber-400"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- end Stack 02 -->
+
+      <!-- Stack 03 -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-navy-3 border border-white/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-white">Stack 03</p>
+              <p class="text-[10px] text-gray-400 font-mono">HTML · CSS · Tailwind · Bash · Python</p>
+            </div>
+          </div>
+          <span class="text-[10px] text-gray-500 font-medium">2 projects</span>
+        </div>
+        <p class="text-[10px] text-gray-500 mb-4 ml-1">
+          Frontend: HTML + Tailwind CSS &nbsp;|&nbsp; Scripting: Python + Bash &nbsp;|&nbsp; CI/CD: GitHub Actions
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- Card: DevLink -->
+          <div class="project-card bg-navy-2 rounded-2xl overflow-hidden border border-white/8">
+            <div class="relative">
+              <div class="screenshot-placeholder"
+                style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
+                <svg width="100%" height="190" viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="380" height="190" fill="#16213e"/>
+                  <rect x="0" y="0" width="380" height="40" fill="#1a1a2e"/>
+                  <rect x="12" y="13" width="80" height="14" rx="5" fill="#0f3460"/>
+                  <rect x="280" y="12" width="88" height="16" rx="6" fill="#e94560" opacity="0.8"/>
+                  <!-- Content cards -->
+                  <rect x="10" y="55" width="170" height="120" rx="10" fill="#1a1a2e" stroke="#0f3460" stroke-width="1"/>
+                  <rect x="20" y="65" width="150" height="40" rx="6" fill="#0f3460" opacity="0.5"/>
+                  <rect x="20" y="112" width="100" height="7" rx="3" fill="#e94560" opacity="0.6"/>
+                  <rect x="20" y="124" width="150" height="5" rx="2" fill="#0f3460" opacity="0.5"/>
+                  <rect x="20" y="134" width="130" height="5" rx="2" fill="#0f3460" opacity="0.4"/>
+                  <rect x="20" y="148" width="60" height="16" rx="5" fill="#e94560" opacity="0.6"/>
+                  <rect x="195" y="55" width="175" height="120" rx="10" fill="#1a1a2e" stroke="#0f3460" stroke-width="1"/>
+                  <rect x="205" y="65" width="155" height="40" rx="6" fill="#0f3460" opacity="0.5"/>
+                  <rect x="205" y="112" width="100" height="7" rx="3" fill="#a855f7" opacity="0.6"/>
+                  <rect x="205" y="124" width="155" height="5" rx="2" fill="#0f3460" opacity="0.5"/>
+                  <rect x="205" y="134" width="120" height="5" rx="2" fill="#0f3460" opacity="0.4"/>
+                  <rect x="205" y="148" width="60" height="16" rx="5" fill="#a855f7" opacity="0.6"/>
+                </svg>
+              </div>
+              <div class="absolute top-2 left-2">
+                <span class="bg-purple-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">🚀 New</span>
+              </div>
+              <div class="absolute top-2 right-2">
+                <span class="bg-blue-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">▶ In Progress</span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-sm font-bold text-white mb-1">DevLink Portfolio</h3>
+              <p class="text-[11px] text-gray-400 leading-relaxed mb-3">A clean, responsive developer portfolio template built with pure HTML and Tailwind CSS with zero dependencies.</p>
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <span class="bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">HTML</span>
+                <span class="bg-sky-500/10 border border-sky-500/30 text-sky-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">Tailwind CSS</span>
+                <span class="bg-gray-500/10 border border-gray-500/30 text-gray-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">CSS</span>
+                <span class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">JavaScript</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com/iiceekiing/devlink-portfolio" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-white transition-all">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  Source
+                </a>
+                <a href="#" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-amber-400/50 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-amber-300 transition-all">
+                  Live Demo
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+                <span class="ml-auto w-2 h-2 rounded-full bg-blue-400"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: AutoDeploy -->
+          <div class="project-card bg-navy-2 rounded-2xl overflow-hidden border border-white/8">
+            <div class="relative">
+              <div class="screenshot-placeholder"
+                style="background: linear-gradient(135deg, #0a1a0a 0%, #0d200d 50%, #051505 100%);">
+                <svg width="100%" height="190" viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="380" height="190" fill="#0a1a0a"/>
+                  <!-- Terminal header -->
+                  <rect x="10" y="10" width="360" height="170" rx="10" fill="#111411"/>
+                  <rect x="10" y="10" width="360" height="28" rx="10" fill="#1a2e1a"/>
+                  <circle cx="28" cy="24" r="5" fill="#ef4444" opacity="0.8"/>
+                  <circle cx="44" cy="24" r="5" fill="#f59e0b" opacity="0.8"/>
+                  <circle cx="60" cy="24" r="5" fill="#10b981" opacity="0.8"/>
+                  <text x="80" y="28" fill="#4b5563" font-size="8" font-family="monospace">bash — autodeploy.sh</text>
+                  <!-- Terminal content -->
+                  <text x="22" y="55" fill="#10b981" font-size="8" font-family="monospace">$ ./autodeploy.sh --env production</text>
+                  <text x="22" y="70" fill="#6b7280" font-size="7" font-family="monospace">→ Checking Docker daemon...</text>
+                  <text x="22" y="83" fill="#10b981" font-size="7" font-family="monospace">✓ Docker is running</text>
+                  <text x="22" y="96" fill="#6b7280" font-size="7" font-family="monospace">→ Building image: app:latest</text>
+                  <text x="22" y="109" fill="#10b981" font-size="7" font-family="monospace">✓ Image built successfully</text>
+                  <text x="22" y="122" fill="#6b7280" font-size="7" font-family="monospace">→ Pushing to registry...</text>
+                  <text x="22" y="135" fill="#10b981" font-size="7" font-family="monospace">✓ Push complete</text>
+                  <text x="22" y="148" fill="#6b7280" font-size="7" font-family="monospace">→ Deploying to server...</text>
+                  <text x="22" y="161" fill="#f59e0b" font-size="7" font-family="monospace">⚡ Deployment in progress...</text>
+                  <!-- Cursor blink -->
+                  <rect x="22" y="166" width="6" height="10" rx="1" fill="#10b981" opacity="0.8"/>
+                </svg>
+              </div>
+              <div class="absolute top-2 left-2">
+                <span class="bg-green-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">✓ Completed</span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-sm font-bold text-white mb-1">AutoDeploy CLI</h3>
+              <p class="text-[11px] text-gray-400 leading-relaxed mb-3">A Bash + Python automation toolkit for zero-downtime Docker deployments with GitHub Actions integration.</p>
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                <span class="bg-lime-500/10 border border-lime-500/30 text-lime-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">Bash</span>
+                <span class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Python</span>
+                <span class="bg-sky-500/10 border border-sky-500/30 text-sky-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">Docker</span>
+                <span class="bg-gray-500/10 border border-gray-500/30 text-gray-300 text-[10px] font-semibold px-2 py-0.5 rounded-full">GitHub Actions</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com/iiceekiing/autodeploy-cli" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-white transition-all">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  Source
+                </a>
+                <a href="#" target="_blank" rel="noopener"
+                  class="flex items-center gap-1.5 border border-white/20 hover:border-amber-400/50 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-gray-300 hover:text-amber-300 transition-all">
+                  Live Demo
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+                <span class="ml-auto w-2 h-2 rounded-full bg-green-400"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- end Stack 03 -->
+
+    </div><!-- end projects padding -->
+
+    <!-- ── Footer ── -->
+    <footer class="border-t border-white/8 px-6 py-5 text-center">
+      <p class="text-[10px] text-gray-600">
+        Built with ❤️ by <span class="text-amber-400 font-semibold">Miracle Amajama</span> · Lagos, Nigeria
+        <span class="mx-2 opacity-30">·</span>
+        <a href="https://github.com/iiceekiing" target="_blank" class="text-gray-500 hover:text-amber-400 transition-colors">@iiceekiing</a>
+      </p>
+    </footer>
+
+  </main><!-- end right panel -->
+</div><!-- end main layout -->
+
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+  // ── Accordion ──────────────────────────────
+  function toggleAccordion(trigger) {
+    const body = trigger.nextElementSibling;
+    const chevron = trigger.querySelector('.accordion-chevron');
+    const isOpen = body.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.accordion-chevron').forEach(c => c.classList.remove('open'));
+
+    // Open clicked if it was closed
+    if (!isOpen) {
+      body.classList.add('open');
+      chevron.classList.add('open');
+    }
+  }
+
+  // ── Filter tabs ────────────────────────────
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // ── Mobile sidebar toggle ──────────────────
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const leftPanel     = document.getElementById('left-panel');
+  const bar1 = document.getElementById('bar1');
+  const bar2 = document.getElementById('bar2');
+  const bar3 = document.getElementById('bar3');
+
+  function closeSidebar() {
+    leftPanel.classList.add('hidden');
+    leftPanel.classList.remove('flex');
+    bar1.style.transform = '';
+    bar2.style.opacity   = '';
+    bar3.style.transform = '';
+  }
+
+  sidebarToggle.addEventListener('click', () => {
+    const isOpen = leftPanel.classList.contains('flex');
+    if (isOpen) {
+      closeSidebar();
+    } else {
+      leftPanel.classList.remove('hidden');
+      leftPanel.classList.add('flex', 'flex-col');
+      bar1.style.transform = 'translateY(7px) rotate(45deg)';
+      bar2.style.opacity   = '0';
+      bar3.style.transform = 'translateY(-7px) rotate(-45deg)';
+    }
+  });
+
+  // Close sidebar on resize to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024) closeSidebar();
+  });
+</script>
+
+</body>
+</html>
